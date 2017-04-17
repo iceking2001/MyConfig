@@ -1,10 +1,14 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => highlight c function, useage: copy the follows to syntax/c.vim
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"来自王垠的著名配置文件，对函数名进行高亮
+" syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>[^()]*)("me=e-2
+" syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>\s*("me=e-1
+" hi cFunction gui=NONE guifg=#268bd2
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => lightline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ }
-
 let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
@@ -25,6 +29,80 @@ let g:lightline = {
       \ 'separator': { 'left': ' ', 'right': ' ' },
       \ 'subseparator': { 'left': ' ', 'right': ' ' }
       \ }
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Quickfix
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <F4>     :bo copen<CR>
+map <C-F4>   :ccl<CR>
+map <A-UP>   :cp<CR>
+map <A-DOWN> :cn<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Ctags
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! UpdateTagsAndCscope()
+    if filereadable("cscope.out")
+        silent cscope kill cscope.out
+    endif
+    silent "cd"
+    "以下注释是在不断尝试中的改进，对于路径中的空格，有了不错的解决
+    :silent !dir /b /s *.c *.cpp *.h *.s *.asm >cscope.files & "\%VIMRUNTIME\%\ctags.exe" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "\%VIMRUNTIME\%\cscope.exe" -Rbk
+    if filereadable("cscope.out")
+        silent cscope add cscope.out
+        echo "加载检索成功"
+    else
+        echo "加载检索失败"
+    endif
+ endfunction
+ 
+set tags=./tags;,tags
+" configure tags - add additional tags here or comment out not-used ones
+" set tags+=~/.vim/tags/cpp_files
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => cscope setting
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if has("cscope")
+  "set csprg=/usr/bin/cscope
+  set csto=1
+  set cst
+  set nocsverb
+  " display in quickfix,":bo cw" or "cw" to open quickfix.
+  set cscopequickfix=s-,c-,d-,i-,t-,e-
+  " add any database in current directory
+  if filereadable("cscope.out")
+      cs add cscope.out
+  endif
+  set csverb
+endif
+
+nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+"F12快捷键,更新当前目录下的ctags与cscope.out文件
+nmap <silent> <C-F12> :call UpdateTagsAndCscope()<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => OmniCppComplete
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let OmniCpp_NamespaceSearch = 1
+let OmniCpp_GlobalScopeSearch = 1
+let OmniCpp_ShowAccess = 1
+let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
+let OmniCpp_MayCompleteDot = 1 " autocomplete after .
+let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
+let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
+let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+" automatically open and close the popup menu / preview window
+au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+set completeopt=menuone,menu,longest,preview
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Neocomplete
@@ -66,6 +144,7 @@ function! s:my_cr_function()
 endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-o>"
 " <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
@@ -79,7 +158,6 @@ let g:neocomplete#enable_auto_select = 1
 "set completeopt+=longest
 "let g:neocomplete#enable_auto_select = 1
 "let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -87,6 +165,8 @@ autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType c set omnifunc=ccomplete#Complete
+autocmd FileType cpp set omnifunc=omni#cpp#complete#Main
 
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
@@ -98,13 +178,14 @@ endif
 
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Fencview
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"au BufRead,BufNewFile *.md silent! FencAutoDetect<CR><CR>
-nmap <leader>fad :silent! FencAutoDetect<CR><CR>
+"nmap <leader>fad :silent! FencAutoDetect<CR><CR>
+nmap <C-F3> :silent! FencAutoDetect<CR><CR>
+
 "let g:fencview_autodetect=1
 "let g:fencview_auto_patterns='*.md'
             
@@ -126,7 +207,7 @@ let g:bufExplorerDefaultHelp=0
 let g:bufExplorerShowRelativePath=1
 let g:bufExplorerFindActive=1
 let g:bufExplorerSortBy='name'
-map <leader>o :BufExplorer<cr>
+map <leader>be :BufExplorer<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Nerd Tree
@@ -138,3 +219,17 @@ let g:NERDTreeWinSize=35
 map <leader>nn :NERDTreeToggle<cr>
 map <leader>nb :NERDTreeFromBookmark<Space>
 map <leader>nf :NERDTreeFind<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Nerd Tree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"let Tlist_Ctags_Cmd = '/usr/bin/ctags'   "设定Linux系统中ctags程序的位置
+let Tlist_Show_One_File=1    "不同时显示多个文件的tag，只显示当前文件的
+let Tlist_Exit_OnlyWindow=1  "如果taglist窗口是最后一个窗口，则退出vim
+let Tlist_Use_Right_Window = 1         "在右侧窗口中显示taglist窗口
+"let Tlist_Use_SingleClick= 1    " 缺省情况下，在双击一个tag时，才会跳到该tag定义的位置
+let Tlist_Auto_Open=1    "在启动VIM后，自动打开taglist窗口
+let Tlist_Process_File_Always=1  "taglist始终解析文件中的tag，不管taglist窗口有没有打开
+let Tlist_File_Fold_Auto_Close=1 "同时显示多个文件中的tag时，可使taglist只显示当前文件tag，其它文件的tag都被折叠起来
+map <leader>tl :TlistToggle<CR>
+
