@@ -199,6 +199,14 @@ hi VimwikiHeader3 guifg=#FFFF00
 hi VimwikiHeader4 guifg=#FF00FF
 hi VimwikiHeader5 guifg=#00FFFF
 hi VimwikiHeader6 guifg=#0000FF
+" disable table mappings for INSERT mode.
+let g:vimwiki_table_mappings=0
+" Toggle checkbox of a list item on/off.
+map  <Leader>tt <Plug>VimwikiToggleListItem
+" Remove checkbox from list item.
+" map <Leader><Space> <Plug>VimwikiRemoveSingleCB
+" Remove checkboxes from all sibling list items.
+" map <Leader><Space> <Plug>VimwikiRemoveCBInList
 
 """"""""""""""""""""""""""""""
 " => bufExplorer plugin
