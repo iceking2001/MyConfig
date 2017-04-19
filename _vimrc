@@ -4,6 +4,9 @@ source $VIMRUNTIME/../basic.vim
 source $VIMRUNTIME/../extend.vim
 source $VIMRUNTIME/../vundle.vim
 source $VIMRUNTIME/../plugin_config.vim
+" 解决中文菜单乱码
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
 behave mswin
 
 set diffexpr=MyDiff()
