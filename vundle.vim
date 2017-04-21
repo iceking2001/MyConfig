@@ -10,18 +10,28 @@ call vundle#begin("D:/Vim/vimfiles/bundle/")
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'Shougo/neocomplete.vim'
+Plugin 'Shougo/neosnippet'
+Plugin 'Shougo/neosnippet-snippets'
+Plugin 'honza/vim-snippets'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-scripts/bufexplorer.zip'
 Plugin 'itchyny/lightline.vim'
 Plugin 'vimwiki/vimwiki'
-"SnipMate depends on vim-addon-mw-utils and tlib.
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'
-Plugin 'honza/vim-snippets'
-Plugin 'hallison/vim-markdown'
+Plugin 'tpope/vim-commentary'
+Plugin 'godlygeek/tabular'
 Plugin 'vim-scripts/taglist.vim'
+"Plugin 'majutsushi/tagbar'
+Plugin 'vim-scripts/TagHighlight'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'yegappan/mru'
+Plugin 'kien/ctrlp.vim'
+Plugin 'mileszs/ack.vim'
+"SnipMate depends on vim-addon-mw-utils and tlib.
+"Plugin 'MarcWeber/vim-addon-mw-utils'
+"Plugin 'tomtom/tlib_vim'
+"Plugin 'garbas/vim-snipmate'
+"Plugin 'hallison/vim-markdown'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo

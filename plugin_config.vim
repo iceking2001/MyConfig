@@ -38,6 +38,25 @@ map <C-F4>   :ccl<CR>
 map <A-UP>   :cp<CR>
 map <A-DOWN> :cn<CR>
 
+map <leader>cc :botright cope<cr>
+map <leader>ccl :ccl<cr>
+"map <leader>co ggVGy:tabnew<cr>:set syntax=qf<cr>pgg
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Ack searching and cope displaying
+"    requires ack.vim - it's much better than vimgrep/grep
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use the the_silver_searcher if possible (much faster than Ack)
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep --smart-case --ignore *.out'
+endif
+" When you press gv you Ack after the selected text
+vnoremap <silent> gv :call VisualSelection('gv', '')<CR>
+" Open Ack and put the cursor in the right position
+map <leader>g :Ack 
+" When you press <leader>r you can search and replace the selected text
+vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Ctags
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -100,6 +119,16 @@ let OmniCpp_MayCompleteDot = 1 " autocomplete after .
 let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
 let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
 let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType c set omnifunc=ccomplete#Complete
+autocmd FileType cpp set omnifunc=omni#cpp#complete#Main
+
 " automatically open and close the popup menu / preview window
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 set completeopt=menuone,menu,longest,preview
@@ -138,13 +167,13 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 " <CR>: close popup and save indent.
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
   " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
+  return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-o>"
+inoremap <expr><A-TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-o>"
 " <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
@@ -158,15 +187,6 @@ let g:neocomplete#enable_auto_select = 1
 "set completeopt+=longest
 "let g:neocomplete#enable_auto_select = 1
 "let g:neocomplete#disable_auto_complete = 1
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType c set omnifunc=ccomplete#Complete
-autocmd FileType cpp set omnifunc=omni#cpp#complete#Main
 
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
@@ -190,7 +210,7 @@ nmap <C-F3> :silent! FencAutoDetect<CR><CR>
 "let g:fencview_auto_patterns='*.md'
             
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Fencview
+" => Vimwiki
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:vimwiki_list = [{'path': 'D:\Wiki', 'path_html': 'D:\Wiki\html'}]
 hi VimwikiHeader1 guifg=#FF0000
@@ -208,6 +228,7 @@ map  <Leader>tt <Plug>VimwikiToggleListItem
 " map <Leader><Space> <Plug>VimwikiRemoveSingleCB
 " Remove checkboxes from all sibling list items.
 " map <Leader><Space> <Plug>VimwikiRemoveCBInList
+"
 """"""""""""""""""""""""""""""
 " => bufExplorer plugin
 """"""""""""""""""""""""""""""
@@ -229,7 +250,7 @@ map <leader>nb :NERDTreeFromBookmark<Space>
 map <leader>nf :NERDTreeFind<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Nerd Tree
+" => Taglist
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "设定Linux系统中ctags程序的位置
 "let Tlist_Ctags_Cmd = '/usr/bin/ctags'   
@@ -253,3 +274,36 @@ let tlist_vimwiki_settings = 'wiki;h:Headers'
 let tlist_markdown_settings = 'markdown;h:Headers'
 map <leader>tl :TlistToggle<CR>
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => CtrlP
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ctrlp_map = '<leader>p'
+let g:ctrlp_cmd = 'CtrlP'
+map <Leader>f :CtrlPMRU<CR>
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+    \ }
+let g:ctrlp_working_path_mode=0
+let g:ctrlp_match_window_bottom=1
+let g:ctrlp_max_height=15
+let g:ctrlp_match_window_reversed=0
+let g:ctrlp_mruf_max=500
+let g:ctrlp_follow_symlinks=1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => easymotion 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:EasyMotion_smartcase = 1
+"let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
+map <Leader><leader>h <Plug>(easymotion-linebackward)
+map <Leader><Leader>j <Plug>(easymotion-j)
+map <Leader><Leader>k <Plug>(easymotion-k)
+map <Leader><leader>l <Plug>(easymotion-lineforward)
+" 重复上一次操作, 类似repeat插件, 很强大
+map <Leader><leader>. <Plug>(easymotion-repeat)
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => mru
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>m :MRU<CR>

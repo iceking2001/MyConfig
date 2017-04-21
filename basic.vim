@@ -175,10 +175,10 @@ set langmenu=zh_CN.UTF-8
 language message zh_CN.UTF-8
 set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"=> Files, backups and undo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Turn backup off, since most stuff is in SVN, git et.c anyway...
 set nobackup
 set nowb
 set noswapfile
@@ -203,9 +203,9 @@ set tw=500
 
 set ai "Auto indent
 set si "Smart indent
+set ci 
 set wrap "Wrap lines
 set nu
-
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -227,10 +227,10 @@ map <c-space> ?
 map <silent> <leader><cr> :noh<cr>
 
 " Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-h> <C-W>h
+nmap <C-l> <C-W>l
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>:tabclose<cr>gT
