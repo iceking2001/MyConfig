@@ -66,13 +66,16 @@ function! UpdateTagsAndCscope()
     endif
     silent "cd"
     "以下注释是在不断尝试中的改进，对于路径中的空格，有了不错的解决
-    :silent !dir /b /s *.c *.cpp *.h *.s *.asm >cscope.files & "\%VIMRUNTIME\%\ctags.exe" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "\%VIMRUNTIME\%\cscope.exe" -Rbk
+    :silent !dir /b /s *.c *.cc *.cpp *.h *.s *.asm >cscope.files & "\%VIMRUNTIME\%\ctags.exe" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "\%VIMRUNTIME\%\cscope.exe" -Rbk
     if filereadable("cscope.out")
         silent cscope add cscope.out
-        echo "加载检索成功"
-    else
-        echo "加载检索失败"
-    endif
+    else  
+        let cscope_file=findfile("cscope.out", ".;")  
+        let cscope_pre=matchstr(cscope_file, ".*/")  
+        if !empty(cscope_file) && filereadable(cscope_file)  
+            exe "cs add" cscope_file cscope_pre  
+        endif        
+    endif  
  endfunction
  
 set tags=./tags;,tags
@@ -201,6 +204,36 @@ endif
 "let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Neosnippet
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='D:/vim/vimfiles/bundle/vim-snippets/snippets'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Fencview
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "nmap <leader>fad :silent! FencAutoDetect<CR><CR>
@@ -307,3 +340,52 @@ map <Leader><leader>. <Plug>(easymotion-repeat)
 " => mru
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <leader>m :MRU<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => compile
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd FileType c    setlocal makeprg=gcc\ -Wall\ %\ -g\ -o\ %<.exe
+autocmd FileType cpp  setlocal makeprg=g++\ -Wall\ %\ -g\ -o\ %<.exe
+autocmd FileType java setlocal makeprg=javac\ %
+autocmd FileType c,cpp compiler gcc 
+
+func Compile()
+    silent exec "w"
+    let v:statusmsg = ''
+    silent exec "make"
+    if empty(v:statusmsg)
+        echo "Compliation successful"
+    endif
+    exec "botright cwindow"
+endfunc
+
+"定义Run函数
+func Run()
+    exec ":call Compile()"
+    echo "Run ".expand('%:t:r').".exe"
+    if &filetype == 'c' || &filetype == 'cpp'
+        exec "!%<.exe"
+    elseif &filetype == 'java'
+        exec "!java %<"
+    endif
+endfunc
+
+"定义Debug函数，用来调试程序
+func Debug()
+    exec ":call Compile()"
+    echo "Gdb ".expand('%:t:r').".exe"
+    "C程序
+    if &filetype == 'c'
+        exec "!gdb %<.exe"
+    elseif &filetype == 'cpp'
+        exec "!gdb %<.exe"
+        "Java程序
+    elseif &filetype == 'java'
+        exec "!jdb %<"
+    endif
+endfunc
+"结束定义Debug
+"设置程序的运行和调试的快捷键F5和Ctrl-F5
+map <F5>   :call Compile()<CR>
+map <C-F5> :call Debug()<CR>
+map <F6>   :call Run()<CR>
