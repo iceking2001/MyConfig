@@ -1,7 +1,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => highlight c function, useage: copy the follows to syntax/c.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"À´×ÔÍõÛóµÄÖøÃûÅäÖÃÎÄ¼ş£¬¶Ôº¯ÊıÃû½øĞĞ¸ßÁÁ
+"æ¥è‡ªç‹å çš„è‘—åé…ç½®æ–‡ä»¶ï¼Œå¯¹å‡½æ•°åè¿›è¡Œé«˜äº®
 " syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>[^()]*)("me=e-2
 " syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>\s*("me=e-1
 " hi cFunction gui=NONE guifg=#268bd2
@@ -9,36 +9,58 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => lightline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ ['mode', 'paste'],
-      \             ['fugitive', 'readonly', 'filename', 'modified'] ],
-      \   'right': [ [ 'lineinfo' ], ['percent'] ]
-      \ },
-      \ 'component': {
-      \   'readonly': '%{&filetype=="help"?"":&readonly?"??":""}',
-      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
-      \ },
-      \ 'component_visible_condition': {
-      \   'readonly': '(&filetype!="help"&& &readonly)',
-      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
-      \ },
-      \ 'separator': { 'left': ' ', 'right': ' ' },
-      \ 'subseparator': { 'left': ' ', 'right': ' ' }
-      \ }
+"let g:lightline = {
+"      \ 'colorscheme': 'wombat',
+"      \ 'active': {
+"      \   'left': [ ['mode', 'paste'],
+"      \             ['fugitive', 'readonly', 'filename', 'modified'] ],
+"      \   'right': [ [ 'lineinfo' ], ['percent'] ]
+"      \ },
+"      \ 'component': {
+"      \   'readonly': '%{&filetype=="help"?"":&readonly?"??":""}',
+"      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+"      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+"      \ },
+"      \ 'component_visible_condition': {
+"      \   'readonly': '(&filetype!="help"&& &readonly)',
+"      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+"      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+"      \ },
+"      \ 'separator': { 'left': ' ', 'right': ' ' },
+"      \ 'subseparator': { 'left': ' ', 'right': ' ' }
+"      \ }
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Airline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if !exists('g:airline_symbols')
+let g:airline_symbols = {}
+endif
+let g:airline_powerline_fonts = 1
+let Powerline_symbols='fancy'  
+
+let g:airline_left_sep = 'î‚°'
+let g:airline_left_alt_sep = 'î‚±'
+let g:airline_right_sep = 'î‚²'
+let g:airline_right_alt_sep = 'î‚³'
+let g:airline_symbols.branch = 'î‚ '
+let g:airline_symbols.readonly = 'î‚¢'
+let g:airline_symbols.linenr = 'î‚¡'
+
+" themes are automatically selected based on the matching colorscheme. this
+" can be overridden by defining a value. >
+let g:airline_theme='dark'
+" æ˜¯å¦æ‰“å¼€tabline
+let g:airline#extensions#tabline#enabled = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Quickfix
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <F4>     :bo copen<CR>
+map <F4>     :botright cwindow<CR>
 map <C-F4>   :ccl<CR>
 map <A-UP>   :cp<CR>
 map <A-DOWN> :cn<CR>
 
-map <leader>cc :botright cope<cr>
+map <leader>cc :botright cwindow<cr>
 map <leader>ccl :ccl<cr>
 "map <leader>co ggVGy:tabnew<cr>:set syntax=qf<cr>pgg
 
@@ -65,7 +87,7 @@ function! UpdateTagsAndCscope()
         silent cscope kill cscope.out
     endif
     silent "cd"
-    "ÒÔÏÂ×¢ÊÍÊÇÔÚ²»¶Ï³¢ÊÔÖĞµÄ¸Ä½ø£¬¶ÔÓÚÂ·¾¶ÖĞµÄ¿Õ¸ñ£¬ÓĞÁË²»´íµÄ½â¾ö
+    "ä»¥ä¸‹æ³¨é‡Šæ˜¯åœ¨ä¸æ–­å°è¯•ä¸­çš„æ”¹è¿›ï¼Œå¯¹äºè·¯å¾„ä¸­çš„ç©ºæ ¼ï¼Œæœ‰äº†ä¸é”™çš„è§£å†³
     :silent !dir /b /s *.c *.cc *.cpp *.h *.s *.asm >cscope.files & "\%VIMRUNTIME\%\ctags.exe" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "\%VIMRUNTIME\%\cscope.exe" -Rbk
     if filereadable("cscope.out")
         silent cscope add cscope.out
@@ -108,7 +130,7 @@ nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
-"F12¿ì½İ¼ü,¸üĞÂµ±Ç°Ä¿Â¼ÏÂµÄctagsÓëcscope.outÎÄ¼ş
+"F12å¿«æ·é”®,æ›´æ–°å½“å‰ç›®å½•ä¸‹çš„ctagsä¸cscope.outæ–‡ä»¶
 nmap <silent> <C-F12> :call UpdateTagsAndCscope()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -285,21 +307,21 @@ map <leader>nf :NERDTreeFind<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Taglist
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Éè¶¨LinuxÏµÍ³ÖĞctags³ÌĞòµÄÎ»ÖÃ
+"è®¾å®šLinuxç³»ç»Ÿä¸­ctagsç¨‹åºçš„ä½ç½®
 "let Tlist_Ctags_Cmd = '/usr/bin/ctags'   
-" ²»Í¬Ê±ÏÔÊ¾¶à¸öÎÄ¼şµÄtag£¬Ö»ÏÔÊ¾µ±Ç°ÎÄ¼şµÄ
+" ä¸åŒæ—¶æ˜¾ç¤ºå¤šä¸ªæ–‡ä»¶çš„tagï¼Œåªæ˜¾ç¤ºå½“å‰æ–‡ä»¶çš„
 let Tlist_Show_One_File=1  
-"Èç¹ûtaglist´°¿ÚÊÇ×îºóÒ»¸ö´°¿Ú£¬ÔòÍË³övim
+"å¦‚æœtaglistçª—å£æ˜¯æœ€åä¸€ä¸ªçª—å£ï¼Œåˆ™é€€å‡ºvim
 let Tlist_Exit_OnlyWindow=1  
-"ÔÚÓÒ²à´°¿ÚÖĞÏÔÊ¾taglist´°¿Ú
+"åœ¨å³ä¾§çª—å£ä¸­æ˜¾ç¤ºtaglistçª—å£
 let Tlist_Use_Right_Window = 1       
-" È±Ê¡Çé¿öÏÂ£¬ÔÚË«»÷Ò»¸ötagÊ±£¬²Å»áÌøµ½¸Ãtag¶¨ÒåµÄÎ»ÖÃ
+" ç¼ºçœæƒ…å†µä¸‹ï¼Œåœ¨åŒå‡»ä¸€ä¸ªtagæ—¶ï¼Œæ‰ä¼šè·³åˆ°è¯¥tagå®šä¹‰çš„ä½ç½®
 "let Tlist_Use_SingleClick= 1    
-"ÔÚÆô¶¯VIMºó£¬×Ô¶¯´ò¿ªtaglist´°¿Ú
+"åœ¨å¯åŠ¨VIMåï¼Œè‡ªåŠ¨æ‰“å¼€taglistçª—å£
 let Tlist_Auto_Open=1 
-"taglistÊ¼ÖÕ½âÎöÎÄ¼şÖĞµÄtag£¬²»¹Ütaglist´°¿ÚÓĞÃ»ÓĞ´ò¿ª
+"taglistå§‹ç»ˆè§£ææ–‡ä»¶ä¸­çš„tagï¼Œä¸ç®¡taglistçª—å£æœ‰æ²¡æœ‰æ‰“å¼€
 let Tlist_Process_File_Always=1 
-"Í¬Ê±ÏÔÊ¾¶à¸öÎÄ¼şÖĞµÄtagÊ±£¬¿ÉÊ¹taglistÖ»ÏÔÊ¾µ±Ç°ÎÄ¼ştag£¬ÆäËüÎÄ¼şµÄtag¶¼±»ÕÛµşÆğÀ´
+"åŒæ—¶æ˜¾ç¤ºå¤šä¸ªæ–‡ä»¶ä¸­çš„tagæ—¶ï¼Œå¯ä½¿tagliståªæ˜¾ç¤ºå½“å‰æ–‡ä»¶tagï¼Œå…¶å®ƒæ–‡ä»¶çš„tagéƒ½è¢«æŠ˜å èµ·æ¥
 let Tlist_File_Fold_Auto_Close=1 
 " Vimwiki support
 let tlist_vimwiki_settings = 'wiki;h:Headers'
@@ -333,7 +355,7 @@ map <Leader><leader>h <Plug>(easymotion-linebackward)
 map <Leader><Leader>j <Plug>(easymotion-j)
 map <Leader><Leader>k <Plug>(easymotion-k)
 map <Leader><leader>l <Plug>(easymotion-lineforward)
-" ÖØ¸´ÉÏÒ»´Î²Ù×÷, ÀàËÆrepeat²å¼ş, ºÜÇ¿´ó
+" é‡å¤ä¸Šä¸€æ¬¡æ“ä½œ, ç±»ä¼¼repeatæ’ä»¶, å¾ˆå¼ºå¤§
 map <Leader><leader>. <Plug>(easymotion-repeat)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -349,7 +371,7 @@ autocmd FileType cpp  setlocal makeprg=g++\ -Wall\ %\ -g\ -o\ %<.exe
 autocmd FileType java setlocal makeprg=javac\ %
 autocmd FileType c,cpp compiler gcc 
 
-func Compile()
+func MyCompile()
     silent exec "w"
     let v:statusmsg = ''
     silent exec "make"
@@ -359,9 +381,9 @@ func Compile()
     exec "botright cwindow"
 endfunc
 
-"¶¨ÒåRunº¯Êı
-func Run()
-    exec ":call Compile()"
+"å®šä¹‰Runå‡½æ•°
+func MyRun()
+    exec ":call MyCompile()"
     echo "Run ".expand('%:t:r').".exe"
     if &filetype == 'c' || &filetype == 'cpp'
         exec "!%<.exe"
@@ -370,22 +392,22 @@ func Run()
     endif
 endfunc
 
-"¶¨ÒåDebugº¯Êı£¬ÓÃÀ´µ÷ÊÔ³ÌĞò
-func Debug()
-    exec ":call Compile()"
+"å®šä¹‰Debugå‡½æ•°ï¼Œç”¨æ¥è°ƒè¯•ç¨‹åº
+func MyDebug()
+    exec ":call MyCompile()"
     echo "Gdb ".expand('%:t:r').".exe"
-    "C³ÌĞò
+    "Cç¨‹åº
     if &filetype == 'c'
         exec "!gdb %<.exe"
     elseif &filetype == 'cpp'
         exec "!gdb %<.exe"
-        "Java³ÌĞò
+        "Javaç¨‹åº
     elseif &filetype == 'java'
         exec "!jdb %<"
     endif
 endfunc
-"½áÊø¶¨ÒåDebug
-"ÉèÖÃ³ÌĞòµÄÔËĞĞºÍµ÷ÊÔµÄ¿ì½İ¼üF5ºÍCtrl-F5
-map <F5>   :call Compile()<CR>
-map <C-F5> :call Debug()<CR>
-map <F6>   :call Run()<CR>
+"ç»“æŸå®šä¹‰Debug
+"è®¾ç½®ç¨‹åºçš„è¿è¡Œå’Œè°ƒè¯•çš„å¿«æ·é”®F5å’ŒCtrl-F5
+map <F5>   :call MyCompile()<CR>
+map <C-F5> :call MyDebug()<CR>
+map <F6>   :call MyRun()<CR>
