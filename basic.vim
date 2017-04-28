@@ -91,6 +91,14 @@ else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
 
+if has('win32') || has('win64')
+    if (v:version == 704 && has("patch393")) || v:version > 704
+        set renderoptions=type:directx,
+                    \gamma:1.5,contrast:0.5,geom:1,
+                    \renmode:5,taamode:1,level:0.5
+    endif
+endif
+
 "Always show current position
 set ruler
 

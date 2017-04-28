@@ -284,9 +284,9 @@ map  <Leader>tt <Plug>VimwikiToggleListItem
 " Remove checkboxes from all sibling list items.
 " map <Leader><Space> <Plug>VimwikiRemoveCBInList
 "
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => bufExplorer plugin
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:bufExplorerDefaultHelp=0
 let g:bufExplorerShowRelativePath=1
 let g:bufExplorerFindActive=1
@@ -359,9 +359,21 @@ map <Leader><leader>l <Plug>(easymotion-lineforward)
 map <Leader><leader>. <Plug>(easymotion-repeat)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => tabular 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"if exists(":Tabularize")
+"    nmap <Leader>tg= :Tabularize /=<CR>
+"    vmap <Leader>tg= :Tabularize /=<CR>
+"    nmap <Leader>tg| :Tabularize /|<CR>
+"    vmap <Leader>tg| :Tabularize /|<CR>
+"    nmap <Leader>tg: :Tabularize /:\zs<CR>
+"    vmap <Leader>tg: :Tabularize /:\zs<CR>
+"endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => mru
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <leader>m :MRU<CR>
+map <leader>mu :MRU<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => compile
