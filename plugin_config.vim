@@ -52,6 +52,9 @@ let g:airline_symbols.linenr = ''
 let g:airline_theme='dark'
 " 是否打开tabline
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline#extensions#quickfix#quickfix_text = 'Quickfix'
+let g:airline#extensions#quickfix#location_text = 'Location'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Quickfix
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -121,14 +124,25 @@ if has("cscope")
   set csverb
 endif
 
+
+"0 or s: Find this C symbol
 nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+"1 or g: Find this definition
 nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+"2 or d: Find functions called by this function
 nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+"3 or c: Find functions calling this function
+nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+"4 or t: Find this text string
+nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+"6 or e: Find this egrep pattern
+nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+"7 or f: Find this file
+nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+"8 or i: Find files #including this file
+nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+"9 or a: Find places where this symbol is assigned a value
+nmap <C-_>a :cs find a <C-R>=expand("<cword>")<CR><CR>
 
 "F12快捷键,更新当前目录下的ctags与cscope.out文件
 nmap <silent> <C-F12> :call UpdateTagsAndCscope()<CR>
@@ -310,25 +324,52 @@ map <leader>nf :NERDTreeFind<cr>
 "设定Linux系统中ctags程序的位置
 "let Tlist_Ctags_Cmd = '/usr/bin/ctags'   
 " 不同时显示多个文件的tag，只显示当前文件的
-let Tlist_Show_One_File=1  
+"let Tlist_Show_One_File=1  
 "如果taglist窗口是最后一个窗口，则退出vim
-let Tlist_Exit_OnlyWindow=1  
+"let Tlist_Exit_OnlyWindow=1  
 "在右侧窗口中显示taglist窗口
-let Tlist_Use_Right_Window = 1       
+"let Tlist_Use_Right_Window = 1       
 " 缺省情况下，在双击一个tag时，才会跳到该tag定义的位置
 "let Tlist_Use_SingleClick= 1    
 "在启动VIM后，自动打开taglist窗口
-let Tlist_Auto_Open=1 
+"let Tlist_Auto_Open=1 
 "taglist始终解析文件中的tag，不管taglist窗口有没有打开
-let Tlist_Process_File_Always=1 
+"let Tlist_Process_File_Always=1 
 "同时显示多个文件中的tag时，可使taglist只显示当前文件tag，其它文件的tag都被折叠起来
-let Tlist_File_Fold_Auto_Close=1 
+"let Tlist_File_Fold_Auto_Close=1 
 " Vimwiki support
-let tlist_vimwiki_settings = 'wiki;h:Headers'
+"let tlist_vimwiki_settings = 'wiki;h:Headers'
 " Markdown support
-let tlist_markdown_settings = 'markdown;h:Headers'
-map <leader>tl :TlistToggle<CR>
+"let tlist_markdown_settings = 'markdown;h:Headers'
+"map <leader>tl :TlistToggle<CR>
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => TagBar
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if has("gui_running")
+    let g:tagbar_expand = 1
+endif
+let g:tagbar_autoshowtag = 1
+let g:tagbar_sort=0
+" Add support for markdown files in tagbar.
+let g:tagbar_type_markdown = {
+            \ 'ctagstype' : 'markdown',
+            \ 'kinds'     : [
+            \ 'h:header',
+            \ ],
+            \ 'sort'    : 0
+            \ }
+
+" vimwiki support
+let g:tagbar_type_vimwiki = {
+            \ 'ctagstype' : 'vimwiki',
+            \ 'kinds'     : [
+            \ 'h:header',
+            \ ],
+            \ 'sort'    : 0
+            \ }
+autocmd VimEnter * nested :call tagbar#autoopen(1)
+map <leader>tl :TagBarToggle<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => CtrlP
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -374,6 +415,16 @@ map <Leader><leader>. <Plug>(easymotion-repeat)
 " => mru
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <leader>mu :MRU<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TagHighlight
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if ! exists('g:TagHighlightSettings')
+    let g:TagHighlightSettings = {}
+endif
+let g:TagHighlightSettings['TagFileName'] = 'tags'
+let g:TagHighlightSettings['CtagsExecutable'] = 'ctags.exe'
+autocmd User TagHighlightAfterRead call airline#load_theme()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => compile

@@ -12,11 +12,11 @@
 if has("mac") || has("macunix")
     set gfn=Hack:h14,Source\ Code\ Pro:h15,Menlo:h15
 elseif has("win16") || has("win32")
-    set gfn=Hack:h14,DejaVu\ Sans\ Mono\ for\ Powerline:h12,Bitstream\ Vera\ Sans\ Mono:h11
+    set gfn=Hack:h12,DejaVu\ Sans\ Mono\ for\ Powerline:h11,Bitstream\ Vera\ Sans\ Mono:h11
 elseif has("gui_gtk2")
-    set gfn=Hack\ 14,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
+    set gfn=Hack\ 12,Source\ Code\ Pro\ 11,Bitstream\ Vera\ Sans\ Mono\ 11
 elseif has("linux")
-    set gfn=Hack\ 14,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
+    set gfn=Hack\ 12,Source\ Code\ Pro\ 11,Bitstream\ Vera\ Sans\ Mono\ 11
 elseif has("unix")
     set gfn=Monospace\ 11
 endif
@@ -100,6 +100,13 @@ inoremap $e ""<esc>i
 " => General abbreviations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 iab xdate <c-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Astyle Format Code
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if (&ft=='c' || &ft=='cpp')
+    set equalprg=astyle\ -A1\ -xV\ -xk\ -Y\ -m0\ -M80\ -f\ -p\ -xg\ -H\ -k3\ -W3\ -y\ -J\ -xy\ --mode=c
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions

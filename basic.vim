@@ -97,6 +97,9 @@ if has('win32') || has('win64')
                     \gamma:1.5,contrast:0.5,geom:1,
                     \renmode:5,taamode:1,level:0.5
     endif
+    au GUIEnter * sim ~x
+    set lines=100
+    set columns=240
 endif
 
 "Always show current position
@@ -168,6 +171,7 @@ catch
 endtry
 
 set background=dark
+"set background=light
 
 " Set extra options when running in GUI mode
 if has("gui_running")
