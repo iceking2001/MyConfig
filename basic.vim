@@ -50,7 +50,7 @@ set history=500
 filetype plugin on
 filetype indent on
 au BufRead,BufNewFile *.md set filetype=markdown
-
+au BufRead,BufNewFile *.wiki set filetype=wiki
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -137,6 +137,11 @@ set magic
 set showmatch 
 " How many tenths of a second to blink when matching brackets
 set mat=2
+
+" 任何时候都显示隐藏字符
+set cocu = ""
+" 在n模式下隐藏字符
+"set cocu = n 
 
 " No annoying sound on errors
 set noerrorbells

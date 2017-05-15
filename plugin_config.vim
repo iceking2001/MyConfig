@@ -281,23 +281,51 @@ nmap <C-F3> :silent! FencAutoDetect<CR><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vimwiki
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:vimwiki_list = [{'path': 'D:\Wiki', 'path_html': 'D:\Wiki\html'}]
+let g:vimwiki_list = [{'path': 'D:\Wiki', 'path_html': 'D:\Wiki\html', 'syntax': 'markdown', 'auto_tags': 1}]
+"let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown' }
+"let g:vimwiki_listsyms = '✗○◐●✓'
 hi VimwikiHeader1 guifg=#FF0000
 hi VimwikiHeader2 guifg=#00FF00
 hi VimwikiHeader3 guifg=#FFFF00
 hi VimwikiHeader4 guifg=#FF00FF
 hi VimwikiHeader5 guifg=#00FFFF
 hi VimwikiHeader6 guifg=#0000FF
+
+let g:vimwiki_hl_cb_checked = 1
 let g:vimwiki_CJK_length = 1
+let g:vimwiki_use_mouse = 1
 " disable table mappings for INSERT mode.
 let g:vimwiki_table_mappings=0
 " Toggle checkbox of a list item on/off.
-map  <Leader>tt <Plug>VimwikiToggleListItem
+map  <Leader>tg <Plug>VimwikiToggleListItem
 " Remove checkbox from list item.
 " map <Leader><Space> <Plug>VimwikiRemoveSingleCB
 " Remove checkboxes from all sibling list items.
 " map <Leader><Space> <Plug>VimwikiRemoveCBInList
-"
+
+" 打开共享文件链接
+function! VimwikiLinkHandler(link)
+    " Use Vim to open external files with the 'vfile:' scheme.  E.g.:
+    "   1) [[vfile:~/Code/PythonProject/abc123.py]]
+    "   2) [[vfile:./|Wiki Home]]
+    let link = a:link
+    if link =~# '^vfile:'
+        let link = link[1:]
+    else
+        return 0
+    endif
+    if link == ''
+        echomsg 'Vimwiki Error: Unable to resolve link!'
+        return 0
+    else
+        "exe 'tabnew ' . fnameescape(link_infos.filename)
+        execute '!start explorer ' . link 
+        return 1
+    endif
+endfunction
+
+autocmd FileType wiki setlocal cocu=""
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => bufExplorer plugin
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -362,14 +390,14 @@ let g:tagbar_type_markdown = {
 
 " vimwiki support
 let g:tagbar_type_vimwiki = {
-            \ 'ctagstype' : 'vimwiki',
+            \ 'ctagstype' : 'wiki',
             \ 'kinds'     : [
             \ 'h:header',
             \ ],
             \ 'sort'    : 0
             \ }
-autocmd VimEnter * nested :call tagbar#autoopen(1)
-map <leader>tl :TagBarToggle<CR>
+autocmd FileType * nested :call tagbar#autoopen(0)
+map <leader>tl :TagbarToggle<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => CtrlP
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
