@@ -297,7 +297,7 @@ let g:vimwiki_use_mouse = 1
 " disable table mappings for INSERT mode.
 let g:vimwiki_table_mappings=0
 " Toggle checkbox of a list item on/off.
-map  <Leader>tg <Plug>VimwikiToggleListItem
+map  <Leader>tt <Plug>VimwikiToggleListItem
 " Remove checkbox from list item.
 " map <Leader><Space> <Plug>VimwikiRemoveSingleCB
 " Remove checkboxes from all sibling list items.
@@ -325,6 +325,8 @@ function! VimwikiLinkHandler(link)
 endfunction
 
 autocmd FileType wiki setlocal cocu=""
+autocmd FileType wiki,md,mkd setlocal shiftwidth=2
+autocmd FileType wiki,md,mkd setlocal tabstop=2
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => bufExplorer plugin
@@ -452,7 +454,12 @@ if ! exists('g:TagHighlightSettings')
 endif
 let g:TagHighlightSettings['TagFileName'] = 'tags'
 let g:TagHighlightSettings['CtagsExecutable'] = 'ctags.exe'
-autocmd User TagHighlightAfterRead call airline#load_theme()
+let g:TagHighlightSettings['LanguageDetectionMethods'] = ['Extension', 'FileType']
+let g:TagHighlightSettings['FileTypeLanguageOverrides'] =  {'tagbar': 'c'}
+let g:TagHighlightSettings['EnableCscope'] = 'True'
+let g:TagHighlightSettings['CscopeOnlyIfPresent'] = 'True'
+"autocmd User TagHighlightAfterRead call airline#load_theme()
+autocmd FileType c,cpp,h,java,py :silent call TagHighlight#Generation#UpdateAndRead(1)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => compile
