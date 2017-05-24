@@ -462,6 +462,14 @@ let g:TagHighlightSettings['CscopeOnlyIfPresent'] = 'True'
 autocmd FileType c,cpp,h,java,py :silent call TagHighlight#Generation#UpdateAndRead(1)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Astyle Format Code
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if (&ft=='c' || &ft=='cpp')
+    setlocal equalprg=astyle\ -A1\ -xV\ -xk\ -Y\ -m0\ -M80\ -f\ -p\ -xg\ -H\ -k3\ -W3\ -y\ -J\ -xy\ --mode=c
+endif
+au FileType c,cpp setlocal equalprg=astyle\ -A1\ -xV\ -xk\ -Y\ -m0\ -M80\ -f\ -p\ -xg\ -H\ -k3\ -W3\ -y\ -J\ -xy\ --mode=c
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => compile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd FileType c    setlocal makeprg=gcc\ -Wall\ %\ -g\ -o\ %<.exe

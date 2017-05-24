@@ -100,6 +100,7 @@ if has('win32') || has('win64')
     au GUIEnter * sim ~x
     set lines=100
     set columns=240
+    winpos 0 0
 endif
 
 "Always show current position
