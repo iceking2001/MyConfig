@@ -173,7 +173,8 @@ endif
 
 try
     "colorscheme solarized
-    colorscheme evening
+    "colorscheme evening
+    colorscheme Monokai
 catch
 endtry
 

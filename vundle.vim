@@ -2,16 +2,25 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
-set rtp+=D:/Vim/vimfiles/bundle/Vundle.vim/
-call vundle#begin("D:/Vim/vimfiles/bundle/")
+if has("win16") || has("win32")
+    set rtp+=D:/Vim/vimfiles/bundle/Vundle.vim/
+    call vundle#begin("D:/Vim/vimfiles/bundle/")
+endif
+
+if has("unix")
+    set rtp+=~/.vim/bundle/Vundle.vim/
+    call vundle#begin("~/.vim/bundle/")
+endif
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+if has("lua")
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'Shougo/neosnippet'
 Plugin 'Shougo/neosnippet-snippets'
+endif
 Plugin 'honza/vim-snippets'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdtree'
@@ -20,7 +29,7 @@ Plugin 'vim-scripts/bufexplorer.zip'
 Plugin 'vimwiki/vimwiki'
 Plugin 'tpope/vim-commentary'
 Plugin 'godlygeek/tabular'
-Plugin 'vim-scripts/taglist.vim'
+"Plugin 'vim-scripts/taglist.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'vim-scripts/TagHighlight'
 Plugin 'easymotion/vim-easymotion'
@@ -30,7 +39,7 @@ Plugin 'mileszs/ack.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'flazz/vim-colorschemes'
-Plugin 'amiorin/vim-project'
+"Plugin 'amiorin/vim-project'
 "SnipMate depends on vim-addon-mw-utils and tlib.
 "Plugin 'MarcWeber/vim-addon-mw-utils'
 "Plugin 'tomtom/tlib_vim'
