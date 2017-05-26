@@ -178,6 +178,7 @@ try
         colorscheme Monokai
     else
         colorscheme evening
+    endif
 catch
 endtry
 

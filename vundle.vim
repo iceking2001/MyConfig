@@ -17,9 +17,12 @@ endif
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 if has("lua")
-Plugin 'Shougo/neocomplete.vim'
-Plugin 'Shougo/neosnippet'
-Plugin 'Shougo/neosnippet-snippets'
+    Plugin 'Shougo/neocomplete.vim'
+    Plugin 'Shougo/neosnippet'
+    Plugin 'Shougo/neosnippet-snippets'
+else
+    Plugin 'exvim/ex-autocomplpop'
+    Plugin 'ervandew/supertab'
 endif
 Plugin 'honza/vim-snippets'
 Plugin 'altercation/vim-colors-solarized'

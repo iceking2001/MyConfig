@@ -288,7 +288,11 @@ if has("lua")
 
     " Tell Neosnippet about the other snippets
     let g:neosnippet#snippets_directory='D:/vim/vimfiles/bundle/vim-snippets/snippets'
-
+else
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " => supertab
+    """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    let g:SuperTabDefaultCompletionType="context"
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
