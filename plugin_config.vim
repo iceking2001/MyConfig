@@ -464,9 +464,6 @@ autocmd FileType c,cpp,h,java,py :silent call TagHighlight#Generation#UpdateAndR
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Astyle Format Code
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if (&ft=='c' || &ft=='cpp')
-    setlocal equalprg=astyle\ -A1\ -xV\ -xk\ -Y\ -m0\ -M80\ -f\ -p\ -xg\ -H\ -k3\ -W3\ -y\ -J\ -xy\ --mode=c
-endif
 au FileType c,cpp setlocal equalprg=astyle\ -A1\ -xV\ -xk\ -Y\ -m0\ -M80\ -f\ -p\ -xg\ -H\ -k3\ -W3\ -y\ -J\ -xy\ --mode=c
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
