@@ -1,13 +1,15 @@
 source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
-source $VIMRUNTIME/../basic.vim
-source $VIMRUNTIME/../extend.vim
-source $VIMRUNTIME/../vundle.vim
-source $VIMRUNTIME/../plugin_config.vim
+source D:/GitRepo/vimrc/basic.vim
+source D:/GitRepo/vimrc/extend.vim
+source D:/GitRepo/vimrc/vundle.vim
+source D:/GitRepo/vimrc/plugin_config.vim
 " 解决中文菜单乱码
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 behave mswin
+
+colo evening
 
 set diffexpr=MyDiff()
 function MyDiff()
