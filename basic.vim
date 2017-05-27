@@ -362,10 +362,6 @@ map <leader>s? z=
 " => vimdiff
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap <Leader>df :vertical diffsplit<space>
-if &diff
-    map <leader>dfn ]c
-    map <leader>dfp [c
-endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
