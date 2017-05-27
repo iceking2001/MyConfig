@@ -173,9 +173,8 @@ endif
 
 try
     "colorscheme solarized
-    "colorscheme evening
     if has("unix")
-        colorscheme Monokai
+        colorscheme evening
     else
         colorscheme evening
     endif
