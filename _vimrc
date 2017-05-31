@@ -1,15 +1,7 @@
 source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
-source D:/GitRepo/vimrc/basic.vim
-source D:/GitRepo/vimrc/extend.vim
-source D:/GitRepo/vimrc/vundle.vim
-source D:/GitRepo/vimrc/plugin_config.vim
-" 解决中文菜单乱码
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-behave mswin
 
-colo evening
+behave mswin
 
 set diffexpr=MyDiff()
 function MyDiff()
@@ -40,3 +32,10 @@ function MyDiff()
     let &shellxquote=l:shxq_sav
   endif
 endfunction
+
+
+source D:/GitRepo/MyConfig/function.vim
+source D:/GitRepo/MyConfig/basic.vim
+source D:/GitRepo/MyConfig/extend.vim
+source D:/GitRepo/MyConfig/vundle.vim
+source D:/GitRepo/MyConfig/plugin_config.vim
