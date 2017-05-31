@@ -1,37 +1,39 @@
-source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
+if has("win16") || has("win32") || has("win64")
+    source $VIMRUNTIME/vimrc_example.vim
+    source $VIMRUNTIME/mswin.vim
 
-behave mswin
+    behave mswin
 
-set diffexpr=MyDiff()
-function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      if empty(&shellxquote)
-        let l:shxq_sav = ''
-        set shellxquote&
-      endif
-      let cmd = '"' . $VIMRUNTIME . '\diff"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-  if exists('l:shxq_sav')
-    let &shellxquote=l:shxq_sav
-  endif
-endfunction
+    set diffexpr=MyDiff()
+    function MyDiff()
+        let opt = '-a --binary '
+        if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+        if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+        let arg1 = v:fname_in
+        if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+        let arg2 = v:fname_new
+        if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+        let arg3 = v:fname_out
+        if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+        if $VIMRUNTIME =~ ' '
+            if &sh =~ '\<cmd'
+                if empty(&shellxquote)
+                    let l:shxq_sav = ''
+                    set shellxquote&
+                endif
+                let cmd = '"' . $VIMRUNTIME . '\diff"'
+            else
+                let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+            endif
+        else
+            let cmd = $VIMRUNTIME . '\diff'
+        endif
+        silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
+        if exists('l:shxq_sav')
+            let &shellxquote=l:shxq_sav
+        endif
+    endfunction
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer: 
@@ -116,6 +118,21 @@ set so=7
 "set langmenu=en
 "source $VIMRUNTIME/delmenu.vim
 "source $VIMRUNTIME/menu.vim
+set encoding=utf-8
+set termencoding=utf-8
+
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+set fileencoding=utf-8
+set ambiwidth=double
+set fileformats=unix,dos,mac
+
+if has("win16") || has("win32") || has("win64")
+    set langmenu=zh_CN.UTF-8
+    language messages zh_CN.UTF-8
+    " 解决中文菜单乱码
+    source $VIMRUNTIME/delmenu.vim
+    source $VIMRUNTIME/menu.vim
+endif
 
 " Turn on the WiLd menu
 set wildmenu
@@ -177,9 +194,9 @@ set showmatch
 set mat=2
 
 " 任何时候都显示隐藏字符
-set cocu = ""
+set cocu=niv
 " 在n模式下隐藏字符
-"set cocu = n 
+"set cocu=n 
 
 " No annoying sound on errors
 set noerrorbells
@@ -208,29 +225,13 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-set encoding=utf-8
-set termencoding=utf-8
-
-set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-set fileencoding=utf-8
-set ambiwidth=double
-
 " Set extra options when running in GUI mode
 if has("gui_running")
     set guioptions-=T
     set guioptions-=e
     set t_Co=256
     set guitablabel=%M\ %t
-
-    set langmenu=zh_CN.UTF-8
-    language message zh_CN.UTF-8
-    " 解决中文菜单乱码
-    source $VIMRUNTIME/delmenu.vim
-    source $VIMRUNTIME/menu.vim
 endif
-
-
-set fileformats=unix,dos,mac
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "=> Files, backups and undo
@@ -324,8 +325,8 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers 
 try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
+    set switchbuf=useopen,usetab,newtab
+    set stal=2
 catch
 endtry
 
@@ -356,10 +357,10 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 if has("mac") || has("macunix")
-  nmap <D-j> <M-j>
-  nmap <D-k> <M-k>
-  vmap <D-j> <M-j>
-  vmap <D-k> <M-k>
+    nmap <D-j> <M-j>
+    nmap <D-k> <M-k>
+    vmap <D-j> <M-j>
+    vmap <D-k> <M-k>
 endif
 
 if has("autocmd")
@@ -417,7 +418,7 @@ if has("mac") || has("macunix")
 elseif has("win16") || has("win32")
     "set gfn=Hack:h12,DejaVu\ Sans\ Mono\ for\ Powerline:h11,Bitstream\ Vera\ Sans\ Mono:h11
     set gfn=Hack:h11:Inziu\ IosevkaCC\ SC:h12,DejaVu\ Sans\ Mono\ for\ Powerline:h11,Bitstream\ Vera\ Sans\ Mono:h11
-    
+
 elseif has("gui_gtk2")
     set gfn=Hack\ 12,Source\ Code\ Pro\ 11,Bitstream\ Vera\ Sans\ Mono\ 11
 elseif has("linux")
@@ -869,9 +870,9 @@ if has("lua")
                 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
     " For conceal markers.
-    if has('conceal')
-        set conceallevel=2 concealcursor=niv
-    endif
+    "if has('conceal')
+    "    set conceallevel=2 concealcursor=niv
+    "endif
 
     " Enable snipMate compatibility feature.
     let g:neosnippet#enable_snipmate_compatibility = 1
@@ -902,7 +903,7 @@ if has("win16") || has("win32")
 else
     let g:vimwiki_list = [{'path': '~/Wiki', 'path_html': '~/Wiki/html', 'syntax': 'markdown', 'auto_tags': 1}]
 endif
-    
+
 "let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown' }
 "let g:vimwiki_listsyms = '✗○◐●✓'
 hi VimwikiHeader1 guifg=#FF0000
@@ -924,7 +925,7 @@ map  <Leader>tt <Plug>VimwikiToggleListItem
 " Remove checkboxes from all sibling list items.
 " map <Leader><Space> <Plug>VimwikiRemoveCBInList
 
-autocmd FileType wiki setlocal cocu=""
+autocmd FileType wiki,md,mkd setlocal cocu=""
 autocmd FileType wiki,md,mkd setlocal shiftwidth=2
 autocmd FileType wiki,md,mkd setlocal tabstop=2
 
@@ -1100,22 +1101,22 @@ function! CleanExtraSpaces()
 endfun
 
 function! <SID>BufcloseCloseIt()
-   let l:currentBufNum = bufnr("%")
-   let l:alternateBufNum = bufnr("#")
+    let l:currentBufNum = bufnr("%")
+    let l:alternateBufNum = bufnr("#")
 
-   if buflisted(l:alternateBufNum)
-     buffer #
-   else
-     bnext
-   endif
+    if buflisted(l:alternateBufNum)
+        buffer #
+    else
+        bnext
+    endif
 
-   if bufnr("%") == l:currentBufNum
-     new
-   endif
+    if bufnr("%") == l:currentBufNum
+        new
+    endif
 
-   if buflisted(l:currentBufNum)
-     execute("bdelete! ".l:currentBufNum)
-   endif
+    if buflisted(l:currentBufNum)
+        execute("bdelete! ".l:currentBufNum)
+    endif
 endfunction
 
 " Returns true if paste mode is enabled
@@ -1255,3 +1256,4 @@ function MyDebug()
         exec "!jdb %<"
     endif
 endfunc
+
