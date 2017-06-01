@@ -233,6 +233,8 @@ if has("gui_running")
     set guitablabel=%M\ %t
 endif
 
+set helplang=cn
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "=> Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -574,7 +576,7 @@ Plugin 'hail2u/vim-css3-syntax'
 Plugin 'pangloss/vim-javascript'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'vim-syntastic/syntastic'
-Plugin "vimcn/vimcdoc"
+Plugin 'vimcn/vimcdoc'
 "Plugin 'amiorin/vim-project'
 "SnipMate depends on vim-addon-mw-utils and tlib.
 "Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -684,10 +686,11 @@ endif
 " can be overridden by defining a value. >
 let g:airline_theme='dark'
 " 是否打开tabline
-let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline#extensions#quickfix#quickfix_text = 'Quickfix'
 let g:airline#extensions#quickfix#location_text = 'Location'
+let g:airline#extensions#syntastic#enabled = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Quickfix
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1004,6 +1007,17 @@ let g:tagbar_type_vimwiki = {
             \ ],
             \ 'sort'    : 0
             \ }
+
+let g:tagbar_type_typescript = {
+            \ 'ctagstype': 'javascript',
+            \ 'kinds': [
+            \ 'a:array',
+            \ 'o:object',
+            \ 'r:var',
+            \ 'f:function',
+            \ ],
+            \ 'sort' : 0
+            \ }
 autocmd FileType * nested :call tagbar#autoopen(0)
 map <leader>tl :TagbarToggle<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1096,15 +1110,27 @@ set statusline+=%*
 " javascript
 let g:syntastic_javascript_checkers = ['jslint']
 let g:syntastic_javascript_jslint_args = "--white --nomen --regexp --browser --devel --windows --sloppy --vars"
+" cpp
+let g:syntastic_cpp_checkers = ['cppcheck']
+let g:syntastic_cpp_cppcheck_exec = "C:\\Program Files\\Cppcheck\\cppcheck.exe"
+let g:syntastic_cpp_cppcheck_args = "--enable=all"
+
 " 设置错误符号
-let g:syntastic_error_symbol='✗'
+"let g:syntastic_error_symbol='✗'
 " 设置警告符号
-let g:syntastic_warning_symbol='⚠'
+"let g:syntastic_warning_symbol='⚠'
+
+hi SyntasticWarningSign guifg=black guibg=yellow
+hi SyntasticErrorSign guifg=white guibg=red
+
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_stl_format = "[%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]"
 
+nmap <leader>ln :lnext<CR>
+nmap <leader>lp :lprevious<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FILE: 
@@ -1204,12 +1230,12 @@ function! UpdateTagsAndCscope()
     endif
     silent "cd"
 
-    if has("win16") || has("win32")
+    if has("win16") || has("win32") || has("win64")
         "以下注释是在不断尝试中的改进，对于路径中的空格，有了不错的解决
-        :silent !dir /b /s *.c *.cc *.cpp *.h *.s *.asm >cscope.files & "\%VIMRUNTIME\%\ctags.exe" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "\%VIMRUNTIME\%\cscope.exe" -Rbk
+        :silent !dir /b /s *.c *.cc *.cpp *.h *.s *.asm *.py *.js >cscope.files & "\%VIMRUNTIME\%\ctags.exe" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "\%VIMRUNTIME\%\cscope.exe" -Rbk
     else
         "以下注释是在不断尝试中的改进，对于路径中的空格，有了不错的解决
-        :silent !find . -regex '.*\.c|.*\.cc\|.*\.cpp\|.*\.h\|.*\.s\|.*\.asm' | ls |sed "s:^:`pwd`/:" >cscope.files & "ctags" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "cscope" -Rbk
+        :silent !find . -regex '.*\.c|.*\.cc\|.*\.cpp\|.*\.h\|.*\.s\|.*\.asm\|.*\.py\|.*\.js' | ls |sed "s:^:`pwd`/:" >cscope.files & "ctags" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "cscope" -Rbk
     endif
 
     if filereadable("cscope.out")
