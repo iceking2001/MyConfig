@@ -570,6 +570,11 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'mbbill/fencview'
+Plugin 'hail2u/vim-css3-syntax'     
+Plugin 'pangloss/vim-javascript'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'vim-syntastic/syntastic'
+Plugin "vimcn/vimcdoc"
 "Plugin 'amiorin/vim-project'
 "SnipMate depends on vim-addon-mw-utils and tlib.
 "Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -1081,6 +1086,24 @@ map <F5>   :call MyCompile()<CR>
 map <C-F5> :call MyDebug()<CR>
 map <F6>   :call MyRun()<CR>
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => syntastic
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+" javascript
+let g:syntastic_javascript_checkers = ['jslint']
+let g:syntastic_javascript_jslint_args = "--white --nomen --regexp --browser --devel --windows --sloppy --vars"
+" 设置错误符号
+let g:syntastic_error_symbol='✗'
+" 设置警告符号
+let g:syntastic_warning_symbol='⚠'
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
