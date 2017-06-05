@@ -152,8 +152,8 @@ if has('win32') || has('win64')
                     \renmode:5,taamode:1,level:0.5
     endif
     au GUIEnter * sim ~x
-    set lines=100
-    set columns=240
+    "set lines=100
+    "set columns=240
     winpos 0 0
 endif
 
@@ -447,6 +447,7 @@ catch
 endtry
 
 set background=dark
+hi VertSplit guibg=#31312D guifg=#526A83 ctermfg=White ctermbg=Black term=none cterm=none gui=none
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Fast editing and reloading of vimrc configs
@@ -527,6 +528,7 @@ iab xdate <c-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
 "       vundle.vim
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"{{{
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -576,6 +578,7 @@ Plugin 'hail2u/vim-css3-syntax'
 Plugin 'pangloss/vim-javascript'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'vim-syntastic/syntastic'
+Plugin 'airblade/vim-rooter'
 Plugin 'vimcn/vimcdoc'
 "Plugin 'amiorin/vim-project'
 "SnipMate depends on vim-addon-mw-utils and tlib.
@@ -614,13 +617,15 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-
+"
+"}}}
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FILE: 
 "       plugin_config.vim
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"{{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => highlight c function, useage: copy the follows to syntax/c.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1025,7 +1030,7 @@ map <leader>tl :TagbarToggle<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
-map <Leader>f :CtrlPMRU<CR>
+map <Leader>ff :CtrlPMRU<CR>
 let g:ctrlp_custom_ignore = {
             \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
             \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
@@ -1073,18 +1078,29 @@ if ! exists('g:TagHighlightSettings')
     let g:TagHighlightSettings = {}
 endif
 let g:TagHighlightSettings['TagFileName'] = 'tags'
-let g:TagHighlightSettings['CtagsExecutable'] = 'ctags.exe'
+if has("unix")
+    let g:TagHighlightSettings['CtagsExecutable'] = 'ctags'
+else
+    let g:TagHighlightSettings['CtagsExecutable'] = 'ctags.exe'
+endif
 let g:TagHighlightSettings['LanguageDetectionMethods'] = ['Extension', 'FileType']
 let g:TagHighlightSettings['FileTypeLanguageOverrides'] =  {'tagbar': 'c'}
 let g:TagHighlightSettings['EnableCscope'] = 'True'
 let g:TagHighlightSettings['CscopeOnlyIfPresent'] = 'True'
+let g:TagHighlightSettings['DoNotGenerateTags'] = 'True'                    
 "autocmd User TagHighlightAfterRead call airline#load_theme()
-autocmd FileType c,cpp,h,java,py :silent call TagHighlight#Generation#UpdateAndRead(1)
+"autocmd FileType c,cpp,h,java,py :silent call TagHighlight#Generation#UpdateAndRead(1)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Astyle Format Code
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-au FileType c,cpp setlocal equalprg=astyle\ -A1\ -xV\ -xk\ -Y\ -m0\ -M80\ -f\ -p\ -xg\ -H\ -k3\ -W3\ -y\ -J\ -xy\ --mode=c
+if has("unix")
+    " version 2.6+
+    au FileType c,cpp setlocal equalprg=astyle\ -A1\ -xk\ -Y\ -m0\ -M80\ -f\ -p\ -xg\ -H\ -k3\ -W3\ -y\ -J\ -xy\ --mode=c
+else
+    " version 3.0+
+    au FileType c,cpp setlocal equalprg=astyle\ -A1\ -xV\ -xk\ -Y\ -m0\ -M80\ -f\ -p\ -xg\ -H\ -k3\ -W3\ -y\ -J\ -xy\ --mode=c
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => compile
@@ -1132,11 +1148,22 @@ let g:syntastic_stl_format = "[%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]"
 nmap <leader>ln :lnext<CR>
 nmap <leader>lp :lprevious<CR>
 
+"}}}
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-rooter
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rooter_change_directory_for_non_project_files = 'current'
+let g:rooter_patterns = ['.project/', '.git/']
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FILE: 
 "       functions.vim
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"{{{
+"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1228,11 +1255,10 @@ function! UpdateTagsAndCscope()
     if filereadable("cscope.out")
         silent cscope kill cscope.out
     endif
-    silent "cd"
 
     if has("win16") || has("win32") || has("win64")
         "以下注释是在不断尝试中的改进，对于路径中的空格，有了不错的解决
-        :silent !dir /b /s *.c *.cc *.cpp *.h *.s *.asm *.py *.js >cscope.files & "\%VIMRUNTIME\%\ctags.exe" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "\%VIMRUNTIME\%\cscope.exe" -Rbk
+        exec "silent !dir /b /s *.c *.cc *.cpp *.h *.s *.asm *.py *.js > cscope.files & " . $VIMRUNTIME . "\\ctags.exe -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & " . $VIMRUNTIME . "\\cscope.exe -Rbk -i cscope.files"
     else
         "以下注释是在不断尝试中的改进，对于路径中的空格，有了不错的解决
         :silent !find . -regex '.*\.c|.*\.cc\|.*\.cpp\|.*\.h\|.*\.s\|.*\.asm\|.*\.py\|.*\.js' | ls |sed "s:^:`pwd`/:" >cscope.files & "ctags" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "cscope" -Rbk
@@ -1247,6 +1273,8 @@ function! UpdateTagsAndCscope()
             exe "cs add" cscope_file cscope_pre  
         endif        
     endif  
+
+    exec "UpdateTypesFile"
 endfunction
 
 " 打开共享文件链接
@@ -1305,4 +1333,4 @@ function MyDebug()
         exec "!jdb %<"
     endif
 endfunc
-
+"}}}
