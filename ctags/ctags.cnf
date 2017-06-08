@@ -24,13 +24,12 @@
 
 --langdef=javascript
 --langmap=javascript:.js
---regex-javascript=/^(var)?[ \t]*([A-Za-z0-9_$]*\.)*([A-Za-z0-9_$]+)[ \t]*=[ \t]*\[/\3/a,array/
---regex-javascript=/^(var)?[ \t]*([A-Za-z0-9_$]*\.)*([A-Za-z0-9_$]+)[ \t]*=[ \t]*\{/\3/o,object/
---regex-javascript=/^(var)?[ \t]*([A-Za-z0-9_$]*\.)*([A-Za-z0-9_$]+)[ \t]*=[^{\[]*$/\3/r,var/
---regex-javascript=/^var[ \t]+([A-Za-z0-9._$]+)[ \t]*=[ \t]*[A-Za-z0-9_$]+.extend/\1/f,function/
---regex-javascript=/^[ \t]*([A-Za-z0-9_$]*\.)*([A-Za-z0-9_$]+)[ \t]*[:=][ \t]*function/\2/f,function/
---regex-javascript=/^[ \t]*function[ \t]*([A-Za-z0-9_$]+)[ \t]*\(/\1/f,function/
---regex-javascript=/^[ \t]*var[ \t]+([A-Za-z0-9_$]*\.)*([A-Za-z0-9_$]+)[ \t]*=[ \t]function/\2/f,function/
---regex-javascript=/(jQuery|\$)\([ \t]*([^ \t]*)[ \t]*\)\.bind\([ \t]*['"](.*)['"]/\2.\3/f,function/
---regex-javascript=/^[ \t]*describe[ \t]*\([ \t]*["'](.*)["']/\1/f,function/
---regex-javascript=/^([ \t]*)(describe|context|it)[ \t]*\([ \t]*["'](.*)["']/.\1\3/f,function/
+--regex-javascript=/^[ \t]*(export([ \t]+abstract)?)?[ \t]*class[ \t]+([a-zA-Z0-9_]+)/\3/c,classes/
+--regex-javascript=/^[ \t]*(export)?[ \t]*module[ \t]+([a-zA-Z0-9_]+)/\2/n,modules/
+--regex-javascript=/^[ \t]*(export)?[ \t]*function[ \t]+([a-zA-Z0-9_]+)/\2/f,functions/
+--regex-javascript=/^[ \t]*export[ \t]+var[ \t]+([a-zA-Z0-9_]+)/\1/v,variables/
+--regex-javascript=/^[ \t]*var[ \t]+([a-zA-Z0-9_]+)[ \t]*=[ \t]*function[ \t]*\(\)/\1/v,varlambdas/
+--regex-javascript=/^[ \t]*(export)?[ \t]*(public|private)[ \t]+(static)?[ \t]*([a-zA-Z0-9_]+)/\4/m,members/
+--regex-javascript=/^[ \t]*(export)?[ \t]*interface[ \t]+([a-zA-Z0-9_]+)/\2/i,interfaces/
+--regex-javascript=/^[ \t]*(export)?[ \t]*enum[ \t]+([a-zA-Z0-9_]+)/\2/e,enums/
+--regex-javascript=/^[ \t]*import[ \t]+([a-zA-Z0-9_]+)/\1/I,imports/

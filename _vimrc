@@ -1019,16 +1019,20 @@ let g:tagbar_type_vimwiki = {
             \ 'sort'    : 0
             \ }
 
-let g:tagbar_type_typescript = {
+let g:tagbar_type_javascript = {
             \ 'ctagstype': 'javascript',
             \ 'kinds': [
-            \ 'a:array',
-            \ 'o:object',
-            \ 'r:var',
-            \ 'f:function',
+            \ 'c:classes',
+            \ 'n:modules',
+            \ 'v:variables',
+            \ 'm:members',
+            \ 'i:interfaces',
+            \ 'e:enums',
+            \ 'f:functions',
             \ ],
-            \ 'sort' : 0
+            \ 'sort'    : 0
             \ }
+
 autocmd FileType * nested :call tagbar#autoopen(0)
 map <leader>tl :TagbarToggle<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
