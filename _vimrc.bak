@@ -754,6 +754,7 @@ if has("cscope")
     set csverb
 endif
 
+
 "0 or s: Find this C symbol
 nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 "1 or g: Find this definition
@@ -774,7 +775,7 @@ nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-_>a :cs find a <C-R>=expand("<cword>")<CR><CR>
 
 "F12快捷键,更新当前目录下的ctags与cscope.out文件
-nmap <silent> <C-F12> :call UpdateTagsAndCscope2()<CR>
+nmap <silent> <C-F12> :call UpdateTagsAndCscope()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => OmniCppComplete
@@ -1095,7 +1096,7 @@ let g:TagHighlightSettings['EnableCscope'] = 'True'
 let g:TagHighlightSettings['CscopeOnlyIfPresent'] = 'True'
 let g:TagHighlightSettings['DoNotGenerateTags'] = 'True'                    
 "autocmd User TagHighlightAfterRead call airline#load_theme()
-"autocmd FileType c,cpp,h,java,py :call UpdateTagHighlight()
+"autocmd FileType c,cpp,h,java,py :silent call TagHighlight#Generation#UpdateAndRead(1)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Astyle Format Code
@@ -1281,73 +1282,6 @@ function! UpdateTagsAndCscope()
     endif  
 
     exec "UpdateTypesFile"
-endfunction
-
-function! UpdateTagsAndCscope2()
-
-    let proj_path = FindRootDirectory()
-
-    if !empty(proj_path)
-        let proj_path = proj_path."\\.project\\"
-        if isdirectory(proj_path)
-            exec "cd ".proj_path
-        endif
-    endif
-
-    if filereadable("cscope.out")
-        silent cscope kill cscope.out
-    endif
-
-    if has("win16") || has("win32") || has("win64")
-        "以下注释是在不断尝试中的改进，对于路径中的空格，有了不错的解决
-        exec "silent !dir .. /b /s *.c *.cc *.cpp *.h *.s *.asm *.py *.js > cscope.files & " . $VIMRUNTIME . "\\ctags.exe -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & " . $VIMRUNTIME . "\\cscope.exe -Rbk -i cscope.files"
-    else
-        "以下注释是在不断尝试中的改进，对于路径中的空格，有了不错的解决
-        :silent !find . -regex '.*\.c|.*\.cc\|.*\.cpp\|.*\.h\|.*\.s\|.*\.asm\|.*\.py\|.*\.js' | ls |sed "s:^:`pwd`/:" >cscope.files & "ctags" -R --fields=+ianS --excmd=p --extra=+q --c++-kinds=+p --c-kinds=+p -L cscope.files & "cscope" -Rbk
-    endif
-
-    if filereadable("cscope.out")
-        silent cscope add cscope.out
-    else  
-        let cscope_file=findfile("cscope.out", ".;")  
-        let cscope_pre=matchstr(cscope_file, ".*/")  
-        if !empty(cscope_file) && filereadable(cscope_file)  
-            exe "cs add" cscope_file cscope_pre  
-        endif        
-    endif  
-
-    exec "UpdateTypesFileOnly"
-    exec "redraw!"
-    exec "cd -"
-endfunction
-
-function! UpdateTagHighlight()
-    if filereadable("tags")
-        call TagHighlight#Generation#UpdateAndRead(1)
-        exec "UpdateTypesFileOnly"
-        return
-    endif
-
-    let tags_file=findfile("tags", ",;")
-    let tags_pre=matchstr(tags_file, ".*/")
-    if !empty(tags_file) && filereadable(tags_file)  
-        exec "cd " tags_pre
-        call TagHighlight#Generation#UpdateAndRead(1)
-        exec "UpdateTypesFileOnly"
-        exec "cd -"
-        return
-    endif        
-
-    let proj_path=finddir(".project", ",;")
-    if !empty(proj_path)
-        exec "cd " proj_path
-        let tags_file=getcwd()."\\tags"
-        if filereadable(tags_file)
-            call TagHighlight#Generation#UpdateAndRead(1)
-        endif
-        exec "cd -"
-        return 
-    endif
 endfunction
 
 " 打开共享文件链接
