@@ -104,7 +104,7 @@ nmap <leader>w :w!<cr>
 
 " :W sudo saves the file 
 " (useful for handling the permission-denied error)
-command W w !sudo tee % > /dev/null
+"command W w !sudo tee % > /dev/null
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -234,6 +234,12 @@ if has("gui_running")
 endif
 
 set helplang=cn
+
+" resovle the cursor is not block in the cygwin Terminal.
+"let &t_ti.="\e[1 q"
+"let &t_SI.="\e[5 q"
+"let &t_EI.="\e[1 q"
+"let &t_te.="\e[0 q"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "=> Files, backups and undo
