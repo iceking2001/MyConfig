@@ -761,9 +761,9 @@ cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
 " Map ? to something useful
-map ? $
-cmap ? $
-imap ? $
+"map ? $
+"cmap ? $
+"imap ? $
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
