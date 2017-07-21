@@ -323,11 +323,9 @@ endfunc
 function OpenBrowers(name)
     exec ":update"     
 
-    let l:browers = {
-        "cr" : "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
-    }
-
-    exec "silent! start ". l:browers[a:name] . expand("%")
+    let l:browers = { "cr" : "\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" " } 
+    silent exec "!start ". l:browers[a:name] . expand("%:p")
+    
 endfunction
 "}}}
 
@@ -1453,6 +1451,6 @@ nmap <leader>lp :lprevious<CR>
 let g:rooter_change_directory_for_non_project_files = 'current'
 let g:rooter_patterns = ['.project/', '.git/']
 
-map <F2> :call OpenBrowers("cr")<CR>
+map <F2> :silent call OpenBrowers("cr")<CR><CR>
 "}}}
 endif

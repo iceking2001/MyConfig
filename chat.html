@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+      /*
+         html {
+             background: linear-gradient(to bottom right,#35284A,#816F90);
+             background-attachment: fixed;
+         }
+       */
+
+        .chat-window {
+             position: relative;
+             width: 800px;
+             height: 600px;
+             background: linear-gradient(to bottom right,#35284A,#816F90);
+             background-attachment: fixed;
+        }
+
+         .chat-panel {
+             height: calc(100% - 50px);
+             width: calc(100%-16px);
+             overflow-y: hidden;
+         }
+
+         .chat-panel:hover {
+             overflow-y: auto;
+         }
+
+         .glass-filter {
+             background-color: rgba(201, 157, 220, 0.1);
+             border-radius: 5px;
+             box-shadow: 0px 0px 5px #222222;
+         }
+
+         .chat-container {
+             margin-top: 20px; 
+         }
+
+         .chat-sender {
+             clear: right;
+             float: left;
+             margin-left: 10px;
+         }
+
+         .chat-receiver {
+             clear: left;
+             float: right;
+             margin-right: 10px;
+         }
+
+         .chat-container .header-container {
+             width: 40px;
+             height: 40px;
+             border-radius: 50%;
+             vertical-align: top;
+             display: inline-block;
+             background-color: white;
+             border: 4px solid white;
+             float: inherit;
+         }
+
+         .chat-container .header-sender {
+             //box-shadow: 0px 0px 5px #EE537C;
+         filter: drop-shadow(0px 0px 5px rgba(238,123,147, 1.0));
+         position: relative;
+         }
+
+         .chat-container .header-receiver {
+             //box-shadow: 0px 0px 5px #2ECEFF;
+         position: relative;
+         filter: drop-shadow(0px 0px 5px rgba(46,206,256, 1.0));
+         }
+
+         .chat-container .header-sender::after {
+             content:"";
+             position: absolute;
+             width: 0px;
+             height: 0px;
+             top: 18px;
+             left: 100%;
+             border-top: 4px solid transparent;
+             border-bottom: 4px solid transparent;
+             border-left: 8px solid white;
+         }
+
+         .chat-container .header-receiver::after {
+             content:"";
+             position: absolute;
+             width: 0px;
+             height: 0px;
+             top: 18px;
+             right: 100%;
+             border-top: 4px solid transparent;
+             border-bottom: 4px solid transparent;
+             border-right: 8px solid white;
+         }
+
+         .chat-container .header-container  img {
+             width: 100%;
+             height: 100%;
+             border-radius: 50%;
+         }
+
+         .chat-container .content-container {
+             display: inline-block;
+             margin: 0px 10px 0px 10px;
+             float: inherit;
+         }
+
+         .chat-container  .content-header {
+             font: 8px/0.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
+             font-weight: bold;
+             color: #A4A3A3;
+             margin: 0px 10px 10px 10px;
+             float: inherit;
+         }
+
+         .chat-container .content-bg {
+             width: 250px;
+         }
+
+         .chat-container .content-bg .content-body {
+             font: 14px/1.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
+             font-weight: bold;
+             color: #F7F3ED;
+             padding: 10px;
+         }
+
+         .message-container {
+             position: absolute;
+             bottom: 0px;   
+             margin: 5px;
+             height: 40px;
+             width: calc(100% - 10px);
+         }
+
+        .message-container:hover {
+             box-shadow: 0px 0px 5px #E2E0E0;
+         }
+
+         .message-input {
+             position: relative;
+             width: calc(100% - 90px);
+             margin-left: 20px;
+             vertical-align: top;
+             line-height:40px;
+             background-color: transparent;
+             border: 0px;
+             color: #F7F3ED;
+         }
+
+         .message-input:focus {
+            outline: none;
+         }
+
+         .message-btn {
+            position: relative;
+            margin-right: 10px;
+            margin-left: 10px;
+            height: 40px;
+            width: 40px;
+            border: 0px;
+            display: inline-block;
+         }
+
+         .icon.send {
+             height: 75%;
+             width: 75%;
+             max-height: 75vw;
+             max-width: 75vh;
+             position: relative;
+             margin: 5px;
+             border-radius: 10%;
+             //background: -webkit-linear-gradient(top, #7dcae8, #3cafdd);
+             //background: linear-gradient(to bottom, #7dcae8, #3cafdd);
+             //box-shadow: 1vh 1vh 0 0.5vh rgba(0,0,0,0.2);
+         }
+         .icon.send:before {
+             content: "";
+             display: block;
+             background: #fff;
+             background: -webkit-linear-gradient(top, #fff, #f0f0f0);
+             background: linear-gradient(to bottom, #fff, #f0f0f0);
+             position: absolute;
+             top: 20%;
+             height: 60%;
+             width: 100%;
+             -webkit-clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
+             -moz-clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
+             clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
+             background: rgba(0,0,0,0.3);
+             left: 1%;
+             top: 21%;
+         }
+         .icon.send:after {
+             content: "";
+             display: block;
+             background: #fff;
+             background: -webkit-linear-gradient(top, #fff, #f0f0f0);
+             background: linear-gradient(to bottom, #fff, #f0f0f0);
+             position: absolute;
+             top: 20%;
+             height: 60%;
+             width: 100%;
+             -webkit-clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
+             -moz-clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
+             clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
+         }
+
+         ::-webkit-scrollbar
+{
+    width: 16px;
+    background-color: transparent;
+}
+
+        ::-webkit-scrollbar-thumb
+{
+    border-radius: 16px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
+
+        </style>
+
+    </head>
+    <body>
+        <div class="chat-window">
+        <div class="chat-panel">
+            <div class="chat-container chat-sender">
+                <div class="header-container header-sender">
+                    <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
+                </div>
+                <div class="content-container">
+                    <p class="content-header">Victor at 05:30 pm</p>
+                    <div class="content-bg glass-filter">
+                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                    </div>
+                </div>
+            </div> 
+            <div class="chat-container chat-receiver">
+                <div class="header-container header-receiver">
+                    <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                </div>
+                <div class="content-container">
+                    <p class="content-header">Victor at 05:30 pm</p>
+                    <div class="content-bg glass-filter">
+                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                    </div>
+                </div>
+            </div> 
+             <div class="chat-container chat-sender">
+                <div class="header-container header-sender">
+                    <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
+                </div>
+                <div class="content-container">
+                    <p class="content-header">Victor at 05:30 pm</p>
+                    <div class="content-bg glass-filter">
+                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                    </div>
+                </div>
+            </div> 
+            <div class="chat-container chat-receiver">
+                <div class="header-container header-receiver">
+                    <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                </div>
+                <div class="content-container">
+                    <p class="content-header">Victor at 05:30 pm</p>
+                    <div class="content-bg glass-filter">
+                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                    </div>
+                </div>
+            </div> 
+             <div class="chat-container chat-sender">
+                <div class="header-container header-sender">
+                    <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
+                </div>
+                <div class="content-container">
+                    <p class="content-header">Victor at 05:30 pm</p>
+                    <div class="content-bg glass-filter">
+                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                    </div>
+                </div>
+            </div> 
+            <div class="chat-container chat-receiver">
+                <div class="header-container header-receiver">
+                    <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                </div>
+                <div class="content-container">
+                    <p class="content-header">Victor at 05:30 pm</p>
+                    <div class="content-bg glass-filter">
+                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="message-container glass-filter">
+            <input class="message-input" type="edit" placeholder="Enter your message here..."/>
+            <div class="message-btn"/><div class="icon send" /></div>
+        </div>
+        </div>
+    </body>
+</html>
