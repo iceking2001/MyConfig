@@ -156,6 +156,7 @@ body {
     max-width: 100%;
     max-height: 50%;
 }
+
 .content-img img {
     border-radius: 5px;
     max-width: 100%;
@@ -219,7 +220,7 @@ body {
     outline: none;
 }
 
-.message-group-btn {
+.message-group-addon {
     font: 14px/1.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
     font-weight: bold;
     color: #2ECEFF;
@@ -251,19 +252,70 @@ body {
     padding-right: 0px;
 }
 
+.image-panel {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(94,94,94, .8);
+    z-index: 1;
+    display: none;
+}
+
+.image-panel-close {
+    background-color: #2B2D2F;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    padding: 0px;
+    margin: 10px;
+    float: right;
+}
+
+.image-panel-close:hover {
+    background-color: #F45252;
+}
+
+.image-panel-close-icon {
+    font-size: 30px;
+    padding: 10px;
+    color: white;
+    font-weight: 100;
+}
+
+.image-panel-inner {
+    max-width: 65%;
+    max-height: 65%;
+    clear: both;
+    display: block;
+    margin: auto;
+    text-align:center;
+}
 
 </style>
 <script>
     $(document).ready(function(){
-        $('.message-input').bind('keypress',function(event){
+        $('.message-input').on('keypress',function(event){
             if(event.keyCode == "13")   
             {
                 addMessage($('.message-input').val());
             }
         }); 
 
-        $('.message-btn').click(function() {
+        $('#message-sent-btn').on('click', function() {
             addMessage($('.message-input').val());
+        });
+
+        $('.content-img').on('dblclick', function() {
+            $('.image-panel').append($(this).prop('outerHTML'));
+            $('.image-panel .content-img').addClass("image-panel-inner");
+            $('.image-panel').show();
+        });
+
+        $('.image-panel-close').on('click', function() {
+            $('.image-panel').hide();
+            $('.image-panel .content-img').remove();
         });
 
         setScrollTop($('.chat-container'));
@@ -334,8 +386,13 @@ body {
 </script>
 
     </head>
-    <body onunload="">
-        <div id="main" class="container-fluid chat-container">
+    <body>
+        <div class="image-panel">
+            <div class="image-panel-close">
+                <span class="glyphicon glyphicon-remove image-panel-close-icon" aria-hidden="true"></span>
+            </div>
+        </div>
+        <div class="container-fluid chat-container">
             <div class="row">
                 <div class="col-xs-9 col-md-5 sender no-padding-left">
                         <div class="header-container header-sender">
@@ -474,10 +531,13 @@ body {
             <div class="row">
                 <div class="col-lg-12 no-padding-right">
                     <div class="message-input-group">
-                        <span class="message-group-btn">&gt;</span>
+                        <span class="message-group-addon">
+                          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        </span>
                         <input type="text" class="message-input" placeholder="Enter your message here...">
-                        <span class="message-group-btn">
-                            <button class="message-btn" type="button">Send</button>
+                        <span class="message-group-addon">
+                            <!--button class="message-btn" type="button">Send</button-->
+                            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
                         </span>
                     </div><!-- /input-group -->
                 </div><!-- /.col-lg-6 -->
