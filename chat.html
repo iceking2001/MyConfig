@@ -2,307 +2,486 @@
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
-        <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+         <!-- Insert this line above script imports  -->
+        <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- Insert this line after script imports -->
+        <script>if (window.module) module = window.module;</script>
+<style>
+html {
+    height: 100%;
+}
 
-      /*
-         html {
-             background: linear-gradient(to bottom right,#35284A,#816F90);
-             background-attachment: fixed;
-         }
-       */
+body {
+    height: 100%;
+    /* 背景渐变 */
+    background: linear-gradient(to bottom right,#35284A,#816F90);
+    background-attachment: fixed;
+}
 
-        .chat-window {
-             position: relative;
-             width: 800px;
-             height: 600px;
-             background: linear-gradient(to bottom right,#35284A,#816F90);
-             background-attachment: fixed;
-        }
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
-         .chat-panel {
-             height: calc(100% - 50px);
-             width: calc(100%-16px);
-             overflow-y: hidden;
-         }
+.chat-container {
+    height: calc(100% - 50px);
+    padding-bottom: 10px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
 
-         .chat-panel:hover {
-             overflow-y: auto;
-         }
-
-         .glass-filter {
-             background-color: rgba(201, 157, 220, 0.1);
-             border-radius: 5px;
-             box-shadow: 0px 0px 5px #222222;
-         }
-
-         .chat-container {
-             margin-top: 20px; 
-         }
-
-         .chat-sender {
-             clear: right;
-             float: left;
-             margin-left: 10px;
-         }
-
-         .chat-receiver {
-             clear: left;
-             float: right;
-             margin-right: 10px;
-         }
-
-         .chat-container .header-container {
-             width: 40px;
-             height: 40px;
-             border-radius: 50%;
-             vertical-align: top;
-             display: inline-block;
-             background-color: white;
-             border: 4px solid white;
-             float: inherit;
-         }
-
-         .chat-container .header-sender {
-             //box-shadow: 0px 0px 5px #EE537C;
-         filter: drop-shadow(0px 0px 5px rgba(238,123,147, 1.0));
-         position: relative;
-         }
-
-         .chat-container .header-receiver {
-             //box-shadow: 0px 0px 5px #2ECEFF;
-         position: relative;
-         filter: drop-shadow(0px 0px 5px rgba(46,206,256, 1.0));
-         }
-
-         .chat-container .header-sender::after {
-             content:"";
-             position: absolute;
-             width: 0px;
-             height: 0px;
-             top: 18px;
-             left: 100%;
-             border-top: 4px solid transparent;
-             border-bottom: 4px solid transparent;
-             border-left: 8px solid white;
-         }
-
-         .chat-container .header-receiver::after {
-             content:"";
-             position: absolute;
-             width: 0px;
-             height: 0px;
-             top: 18px;
-             right: 100%;
-             border-top: 4px solid transparent;
-             border-bottom: 4px solid transparent;
-             border-right: 8px solid white;
-         }
-
-         .chat-container .header-container  img {
-             width: 100%;
-             height: 100%;
-             border-radius: 50%;
-         }
-
-         .chat-container .content-container {
-             display: inline-block;
-             margin: 0px 10px 0px 10px;
-             float: inherit;
-         }
-
-         .chat-container  .content-header {
-             font: 8px/0.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
-             font-weight: bold;
-             color: #A4A3A3;
-             margin: 0px 10px 10px 10px;
-             float: inherit;
-         }
-
-         .chat-container .content-bg {
-             width: 250px;
-         }
-
-         .chat-container .content-bg .content-body {
-             font: 14px/1.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
-             font-weight: bold;
-             color: #F7F3ED;
-             padding: 10px;
-         }
-
-         .message-container {
-             position: absolute;
-             bottom: 0px;   
-             margin: 5px;
-             height: 40px;
-             width: calc(100% - 10px);
-         }
-
-        .message-container:hover {
-             box-shadow: 0px 0px 5px #E2E0E0;
-         }
-
-         .message-input {
-             position: relative;
-             width: calc(100% - 90px);
-             margin-left: 20px;
-             vertical-align: top;
-             line-height:40px;
-             background-color: transparent;
-             border: 0px;
-             color: #F7F3ED;
-         }
-
-         .message-input:focus {
-            outline: none;
-         }
-
-         .message-btn {
-            position: relative;
-            margin-right: 10px;
-            margin-left: 10px;
-            height: 40px;
-            width: 40px;
-            border: 0px;
-            display: inline-block;
-         }
-
-         .icon.send {
-             height: 75%;
-             width: 75%;
-             max-height: 75vw;
-             max-width: 75vh;
-             position: relative;
-             margin: 5px;
-             border-radius: 10%;
-             //background: -webkit-linear-gradient(top, #7dcae8, #3cafdd);
-             //background: linear-gradient(to bottom, #7dcae8, #3cafdd);
-             //box-shadow: 1vh 1vh 0 0.5vh rgba(0,0,0,0.2);
-         }
-         .icon.send:before {
-             content: "";
-             display: block;
-             background: #fff;
-             background: -webkit-linear-gradient(top, #fff, #f0f0f0);
-             background: linear-gradient(to bottom, #fff, #f0f0f0);
-             position: absolute;
-             top: 20%;
-             height: 60%;
-             width: 100%;
-             -webkit-clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
-             -moz-clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
-             clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
-             background: rgba(0,0,0,0.3);
-             left: 1%;
-             top: 21%;
-         }
-         .icon.send:after {
-             content: "";
-             display: block;
-             background: #fff;
-             background: -webkit-linear-gradient(top, #fff, #f0f0f0);
-             background: linear-gradient(to bottom, #fff, #f0f0f0);
-             position: absolute;
-             top: 20%;
-             height: 60%;
-             width: 100%;
-             -webkit-clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
-             -moz-clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
-             clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 20% 55%, 50% 50%, 20% 45%);
-         }
-
-         ::-webkit-scrollbar
+/* 加入滚动条样式，同时实现hover时才出现 --begin-- */
+.chat-container::-webkit-scrollbar
 {
-    width: 16px;
+    width: 5px;
     background-color: transparent;
 }
 
-        ::-webkit-scrollbar-thumb
+.chat-container::-webkit-scrollbar-thumb
 {
-    border-radius: 16px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    background-color: #555;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,.5);
+    /* background-color: #9FA0A1; */
+     background-color: rgba(73,59,104,.5);
+    visibility: hidden;
 }
 
-        </style>
+.chat-container:hover::-webkit-scrollbar-thumb
+{
+    visibility: visible;
+}
+/* --end-- */
+
+.sender {
+    margin-left: 15px;
+    margin-top:20px;
+    float: left;
+}
+
+.receiver {
+    padding-right: 0px;
+    margin-right:10px;
+    margin-top:20px;
+    float: right;
+}
+
+.header-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    vertical-align: top;
+    display: inline-block;
+    background-color: white;
+    border: 4px solid white;
+}
+
+.header-container  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.header-sender {
+    float: left;
+    position: relative;
+    /* 不规则阴影，box-shadow无效，只能使用filter */
+    /* box-shadow: 0px 0px 5px #EE537C;*/
+    filter: drop-shadow(0px 0px 5px rgba(238,123,147, 1.0));
+}
+
+.header-receiver {
+    float: right;
+    position: relative;
+    /* 不规则阴影，box-shadow无效，只能使用filter */
+    /* box-shadow: 0px 0px 5px #2ECEFF; */
+    filter: drop-shadow(0px 0px 5px rgba(46,206,256, 1.0));
+}
+
+.header-sender::after {
+    content:"";
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    top: 14px;
+    left: calc(100% + 2px);
+    /* 向右三角形 */
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 8px solid white;
+}
+
+.header-receiver::after {
+    content:"";
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    top: 14px;
+    right: calc(100% + 2px);
+    /* 向左三角形 */
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 8px solid white;
+}
+
+
+.content-container {
+    margin: 0px 10px 0px 10px;
+    max-width: calc(100% - 60px);
+    float: inherit;
+}
+
+.content-header {
+    font: 8px/0.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
+    font-weight: bold;
+    color: #A4A3A3;
+    margin: 0px 10px 10px 10px;
+    float: inherit;
+}
+
+.content-body {
+    font: 14px/1.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
+    font-weight: bold;
+    color: #F7F3ED;
+    padding: 10px;
+    max-width: 100%;
+    margin-bottom: 0px;
+}
+
+.content-img {
+    padding: 15px;
+    border-radius: 5px;
+    max-width: 100%;
+    max-height: 50%;
+}
+.content-img img {
+    border-radius: 5px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* 透明背景边框，不能使用opacity，会影响子元素一起模糊 */
+.glass-filter {
+    background-color: rgba(201, 157, 220, 0.1);
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px #222222;
+    float: inherit;
+    clear: both;
+}
+
+.glass-filter:hover {
+    box-shadow: 0px 0px 15px #222222;
+}
+
+
+.message-container {
+    bottom: 100%;
+    height: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.message-container:hover {
+    box-shadow: 0px 0px 5px #E2E0E0;
+}
+
+.message-input-group {
+    height: 40px;
+    /* 宽度自适应 --begin-- */
+    display: table;
+    table-layout: auto;
+    width: 100%;
+    /* --end-- */
+}
+
+.message-input {
+    height: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    border: 0px;
+    margin-bottom: 0;
+    background-color: transparent;
+
+    font: 14px/1.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
+    font-weight: bold;
+    color: #F7F3ED;
+
+    /* 宽度自适应 --begin-- */
+    display: table-cell;
+    width:100%;
+    /* --end-- */
+}
+
+.message-input:focus
+{
+    outline: none;
+}
+
+.message-group-btn {
+    font: 14px/1.5 Helvetica,Tahoma,Arial,'宋体',sans-serif;;
+    font-weight: bold;
+    color: #2ECEFF;
+    vertical-align: middle;
+    text-align: center;
+    text-shadow: 0px 0px 3px rgba(46,206,256, 1.0);
+
+    padding-right: 15px;
+    /* 宽度自适应 --begin-- */
+    display: table-cell;
+    /* 1%必须，否则input会比较短 */
+    width: 1%;
+    /* --end-- */
+}
+
+.message-btn {
+    height: 100%;
+    border: 0px;
+    outline:none;
+    background-color: transparent;
+    text-shadow: 0px 0px 5px rgba(46,206,256, 1.0);
+}
+
+.no-padding-left {
+    padding-left: 0px;
+}
+
+.no-padding-right {
+    padding-right: 0px;
+}
+
+
+</style>
+<script>
+    $(document).ready(function(){
+        $('.message-input').bind('keypress',function(event){
+            if(event.keyCode == "13")   
+            {
+                addMessage($('.message-input').val());
+            }
+        }); 
+
+        $('.message-btn').click(function() {
+            addMessage($('.message-input').val());
+        });
+
+        setScrollTop($('.chat-container'));
+
+        $('.message-input').focus();
+    });
+
+    function addMessage(msg)
+    {
+        var msgElement = '<div class="row">';
+        msgElement +='<div class="col-xs-9 col-md-5 receiver no-padding-left">';
+        msgElement +='<div class="header-container header-receiver">';
+        msgElement +='<img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>';
+        msgElement +='</div>';
+        msgElement +='<div class="content-container no-padding-left">';
+        msgElement +='<p class="content-header">Victor at 05:30 pm</p>';
+        msgElement +='<div class="glass-filter">';
+        msgElement +='<p class="content-body">';
+        msgElement +=msg;
+        msgElement +='</p>';
+        msgElement +='</div>';
+        msgElement +='</div>';
+        msgElement +='</div>';
+        msgElement +='</div>';
+
+        $('.chat-container').append(msgElement);
+
+        setScrollTop($('.chat-container'));
+
+        /* 插入后的动画效果 --begin-- */
+        var receiver = $('.receiver').last();
+
+        receiver.css("opacity","0");
+        receiver.css("margin-right","50px");
+
+        receiver.animate({
+            opacity: '1.0',
+            marginRight: '10px'
+        }, 'slow');
+        /* --end-- */
+
+        $('.message-input').val("");
+        $('.message-input').focus();
+    }
+
+    /* div元素，滚动到底部 */
+    function setScrollTop(obj) 
+    {
+        if (navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/)) 
+        {           
+            /*
+            document.documentElement.scrollTop = scroll_top;
+            window.pageYOffset = scroll_top;
+            document.body.scrollTop = scroll_top;
+
+            window.scrollTo(0, scroll_top);
+            setTimeout(function() {window.scrollTo(0, scroll_top)}, 0);
+            */
+            obj.scrollTop(obj[0].scrollHeight);
+        }
+        else 
+        {
+            /* obj.scrollTop(obj.height()); */
+            obj.scrollTop(obj[0].scrollHeight);
+        }
+    }
+
+</script>
 
     </head>
-    <body>
-        <div class="chat-window">
-        <div class="chat-panel">
-            <div class="chat-container chat-sender">
-                <div class="header-container header-sender">
-                    <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
+    <body onunload="">
+        <div id="main" class="container-fluid chat-container">
+            <div class="row">
+                <div class="col-xs-9 col-md-5 sender no-padding-left">
+                        <div class="header-container header-sender">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">hello!</p> 
+                            </div>
+                        </div>
                 </div>
-                <div class="content-container">
-                    <p class="content-header">Victor at 05:30 pm</p>
-                    <div class="content-bg glass-filter">
-                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-9 col-md-5 sender no-padding-left">
+                        <div class="header-container header-sender">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                            </div>
+                        </div>
                 </div>
-            </div> 
-            <div class="chat-container chat-receiver">
-                <div class="header-container header-receiver">
-                    <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+            </div>
+            <div class="row">
+                <div class="col-xs-9 col-md-5 sender no-padding-left">
+                        <div class="header-container header-sender">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                            </div>
+                        </div>
                 </div>
-                <div class="content-container">
-                    <p class="content-header">Victor at 05:30 pm</p>
-                    <div class="content-bg glass-filter">
-                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
-                    </div>
-                </div>
-            </div> 
-             <div class="chat-container chat-sender">
-                <div class="header-container header-sender">
-                    <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
-                </div>
-                <div class="content-container">
-                    <p class="content-header">Victor at 05:30 pm</p>
-                    <div class="content-bg glass-filter">
-                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
-                    </div>
-                </div>
-            </div> 
-            <div class="chat-container chat-receiver">
-                <div class="header-container header-receiver">
-                    <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
-                </div>
-                <div class="content-container">
-                    <p class="content-header">Victor at 05:30 pm</p>
-                    <div class="content-bg glass-filter">
-                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
-                    </div>
-                </div>
-            </div> 
-             <div class="chat-container chat-sender">
-                <div class="header-container header-sender">
-                    <img src="https://s-media-cache-ak0.pinimg.com/736x/52/cd/d1/52cdd13bbbd7bbd0ef6ffa6170d82bd0--professional-logo-logodesign.jpg"/></img>
-                </div>
-                <div class="content-container">
-                    <p class="content-header">Victor at 05:30 pm</p>
-                    <div class="content-bg glass-filter">
-                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-9 col-md-5 receiver no-padding-left">
+                        <div class="header-container header-receiver">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                            </div>
+                        </div>
                 </div>
             </div> 
-            <div class="chat-container chat-receiver">
-                <div class="header-container header-receiver">
-                    <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+             <div class="row">
+                <div class="col-xs-9 col-md-5 receiver no-padding-left">
+                        <div class="header-container header-receiver">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                            </div>
+                        </div>
                 </div>
-                <div class="content-container">
-                    <p class="content-header">Victor at 05:30 pm</p>
-                    <div class="content-bg glass-filter">
-                        <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+            </div>
+             <div class="row">
+                <div class="col-xs-9 col-md-5 receiver no-padding-left">
+                        <div class="header-container header-receiver">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                            </div>
+                        </div>
+                </div>
+            </div>
+             <div class="row">
+                <div class="col-xs-9 col-md-5 receiver no-padding-left">
+                        <div class="header-container header-receiver">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-9 col-md-5 receiver no-padding-left">
+                    <div class="header-container header-receiver">
+                        <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                    </div>
+                    <div class="content-container no-padding-left">
+                        <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <div class="content-img">
+                                    <img src="http://www.98xz.com/bizhi/UploadPic/2009-11/2009112123338841.jpg" />
+                                </div>
+                            </div>
                     </div>
                 </div>
-            </div> 
+            </div>
+             <div class="row">
+                <div class="col-xs-9 col-md-5 receiver no-padding-left">
+                        <div class="header-container header-receiver">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-9 col-md-5 receiver no-padding-left">
+                        <div class="header-container header-receiver">
+                            <img src="https://s-media-cache-ak0.pinimg.com/736x/da/9a/34/da9a346fe6e5276526ccb98a9d6c573e--cat-design-logo-design.jpg"/></img>
+                        </div>
+                        <div class="content-container no-padding-left">
+                            <p class="content-header">Victor at 05:30 pm</p>
+                            <div class="glass-filter">
+                                <p class="content-body">hello!</p> 
+                            </div>
+                        </div>
+                </div> 
+            </div>
+          
         </div>
-        <div class="message-container glass-filter">
-            <input class="message-input" type="edit" placeholder="Enter your message here..."/>
-            <div class="message-btn"/><div class="icon send" /></div>
-        </div>
+        <div class="container-fluid message-container glass-filter">
+            <div class="row">
+                <div class="col-lg-12 no-padding-right">
+                    <div class="message-input-group">
+                        <span class="message-group-btn">&gt;</span>
+                        <input type="text" class="message-input" placeholder="Enter your message here...">
+                        <span class="message-group-btn">
+                            <button class="message-btn" type="button">Send</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div>
         </div>
     </body>
 </html>
