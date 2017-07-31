@@ -151,16 +151,20 @@ body {
 }
 
 .content-img {
+    position: relative;
     padding: 15px;
     border-radius: 5px;
-    max-width: 100%;
     max-height: 50%;
+    max-width: 100%;
 }
 
-.content-img img {
+img {
     border-radius: 5px;
     max-width: 100%;
     max-height: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+    cursor: pointer;
 }
 
 /* 透明背景边框，不能使用opacity，会影响子元素一起模糊 */
@@ -264,13 +268,15 @@ body {
 }
 
 .image-panel-close {
+    position: absolute;
     background-color: #2B2D2F;
     height: 50px;
     width: 50px;
     border-radius: 50%;
     padding: 0px;
     margin: 10px;
-    float: right;
+    top: 0px;
+    right:0px;
 }
 
 .image-panel-close:hover {
@@ -285,12 +291,23 @@ body {
 }
 
 .image-panel-inner {
-    max-width: 65%;
-    max-height: 65%;
-    clear: both;
-    display: block;
+    position: absolute; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     margin: auto;
-    text-align:center;
+    width: 75%;
+    height: 75%;
+    display: table;
+}
+
+/* 垂直水平居中对齐 */
+.image-panel-inner-cell {
+    position: relative;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
 }
 
 </style>
@@ -307,15 +324,14 @@ body {
             addMessage($('.message-input').val());
         });
 
-        $('.content-img').on('dblclick', function() {
-            $('.image-panel').append($(this).prop('outerHTML'));
-            $('.image-panel .content-img').addClass("image-panel-inner");
+        $('.content-img img').on('click', function() {
+            $('.image-panel-inner-cell').append($(this).prop('outerHTML'));
             $('.image-panel').show();
         });
 
         $('.image-panel-close').on('click', function() {
             $('.image-panel').hide();
-            $('.image-panel .content-img').remove();
+            $('.image-panel-inner-cell img').remove();
         });
 
         setScrollTop($('.chat-container'));
@@ -391,6 +407,7 @@ body {
             <div class="image-panel-close">
                 <span class="glyphicon glyphicon-remove image-panel-close-icon" aria-hidden="true"></span>
             </div>
+            <div class="image-panel-inner"><div class="image-panel-inner-cell"></div></div>
         </div>
         <div class="container-fluid chat-container">
             <div class="row">
@@ -493,7 +510,9 @@ body {
                         <p class="content-header">Victor at 05:30 pm</p>
                             <div class="glass-filter">
                                 <div class="content-img">
-                                    <img src="http://www.98xz.com/bizhi/UploadPic/2009-11/2009112123338841.jpg" />
+                                     <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
+                                     <img src="http://www.98xz.com/bizhi/UploadPic/2009-11/2009112123338841.jpg" />
+                                     <p class="content-body">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!!Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p> 
                                 </div>
                             </div>
                     </div>
