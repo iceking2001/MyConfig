@@ -4,10 +4,10 @@ useage="\
 useage:
     tailh [options] file
 options:
-    -e, --expr=pattern      Hightlight the pattern word.
+    -e, --regex=pattern      Hightlight the pattern word.
     -i, --ignore=case       Case insensitive.
 "
-expr=""
+regex=""
 ignore=""
 head=0
 
@@ -16,19 +16,19 @@ do
     case "$1" in
         -e )
             if [ $head -eq 0 ] ; then
-                expr=${expr}$2
+                regex=${regex}$2
                 head=1
             else
-                expr=${expr}"|"$2
+                regex=${regex}"|"$2
             fi
             shift
             ;;
-        --expr=* )
+        --regex=* )
             if [ $head -eq 0 ] ; then
-                expr=${expr}${1#*=}
+                regex=${regex}${1#*=}
                 head=1
             else
-                expr=${expr}"|"${1#*=}
+                regex=${regex}"|"${1#*=}
             fi
             ;;
         -i | --ignore=case )
@@ -52,5 +52,5 @@ fi
 if [ $head -eq 0 ] ; then
     tail -f ${file} 
 else
-    tail -f ${file} | perl -pe "s/(${ignore}${expr})/\e[1;31m\$1\e[0m/g"
+    tail -f ${file} | perl -pe "s/(${ignore}${regex})/\e[1;31m\$1\e[0m/g"
 fi
