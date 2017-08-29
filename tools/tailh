@@ -1,0 +1,56 @@
+#!/bin/sh
+
+useage="\
+useage:
+    tailh [options] file
+options:
+    -e, --expr=pattern      Hightlight the pattern word.
+    -i, --ignore=case       Case insensitive.
+"
+expr=""
+ignore=""
+head=0
+
+until [ $# = 1 ]
+do
+    case "$1" in
+        -e )
+            if [ $head -eq 0 ] ; then
+                expr=${expr}$2
+                head=1
+            else
+                expr=${expr}"|"$2
+            fi
+            shift
+            ;;
+        --expr=* )
+            if [ $head -eq 0 ] ; then
+                expr=${expr}${1#*=}
+                head=1
+            else
+                expr=${expr}"|"${1#*=}
+            fi
+            ;;
+        -i | --ignore=case )
+            ignore="(?i)"
+            ;;
+        * )
+            echo "${useage}"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [ -f "$1" ]; then
+    file="$1" 
+else
+    echo "${useage}"
+    exit 1
+fi
+    
+if [ $head -eq 0 ] ; then
+    tail -f ${file} 
+else
+    tail -f ${file} | perl -pe "s/(${ignore}${expr})/\e[1;31m\$1\e[0m/g"
+fi
