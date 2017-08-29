@@ -1,11 +1,18 @@
 #!/bin/sh
+# Program:
+#       Make the command "tail" output with keyword hightlight.
+# History:
+#       2017/08/29, Henry Lou release.
+
 
 useage="\
 useage:
     tailh [options] file
+example:
+    tailh -e \"hello\" --regex=\"world\" demo
 options:
     -e, --regex=pattern      Hightlight the pattern word.
-    -i, --ignore=case       Case insensitive.
+    -i, --ignore-case        Case insensitive.
 "
 regex=""
 ignore=""
@@ -31,7 +38,7 @@ do
                 regex=${regex}"|"${1#*=}
             fi
             ;;
-        -i | --ignore=case )
+        -i | --ignore-case )
             ignore="(?i)"
             ;;
         * )
